@@ -59,7 +59,6 @@
 }
 
 body {
-  min-height: 100vh;
   color: #222 !important;
   background: #f5f5f5 !important;
   transition: none;
