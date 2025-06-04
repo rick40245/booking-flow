@@ -1,28 +1,18 @@
 <template>
-    <div class="min-h-screen w-full flex items-center justify-center py-6 px-2" style="background:#f5f5f5;">
-        <div class="w-full max-w-md flex flex-col items-center">
-            <h1 class="title">頁面1 - 服務項目列表頁</h1>
-            <el-form :model="{ search }" class="w-full mb-4">
-                <el-form-item>
-                    <el-input v-model="search" placeholder="搜尋服務項目..." prefix-icon="el-icon-search" clearable />
-                </el-form-item>
-            </el-form>
-            <div class="service-list">
-                <ServiceCard v-for="serviceType in filteredServiceTypes" :key="serviceType.type" :service="serviceType"
-                    :isSelected="selectedServiceType === serviceType.type" @select="handleSelect" />
-                <div v-if="filteredServiceTypes.length === 0" class="empty-state">
-                    <el-empty description="沒有找到符合的服務" />
-                </div>
-            </div>
-            <ConfirmDialog v-model:visible="showConfirm" @confirm="handleLeave" @cancel="showConfirm = false" />
+    <PageContainer title="頁面1 - 服務項目列表頁" max-width="sm">
+        <div class="service-list">
+            <ServiceCard v-for="serviceType in serviceTypes" :key="serviceType.type" :service="serviceType"
+                :isSelected="selectedServiceType === serviceType.type" @select="handleSelect" />
         </div>
-    </div>
+        <ConfirmDialog v-model:visible="showConfirm" @confirm="handleLeave" @cancel="showConfirm = false" />
+    </PageContainer>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import ServiceCard from '../components/ServiceCard.vue'
 import ConfirmDialog from '../components/ConfirmDialog.vue'
+import PageContainer from '../components/PageContainer.vue'
 import { useRouter } from 'vue-router'
 import { useServiceStore } from '@/stores/servicesStore'
 import { useBookingStore } from '@/stores/bookingStore'
@@ -72,15 +62,6 @@ const serviceTypes = computed(() => {
     return Array.from(groups.values())
 })
 
-const search = ref('')
-const filteredServiceTypes = computed(() => {
-    if (!search.value) return serviceTypes.value
-    return serviceTypes.value.filter(serviceType =>
-        serviceType.name.includes(search.value) ||
-        serviceType.staffList.some((staff: string) => staff.includes(search.value))
-    )
-})
-
 const selectedServiceType = ref(null)
 const showConfirm = ref(false)
 
@@ -97,60 +78,18 @@ function handleLeave() {
 }
 
 console.log('serviceTypes:', serviceTypes.value)
-console.log('filteredServiceTypes:', filteredServiceTypes.value)
 </script>
 
 <style scoped>
-.service-list-outer {
-    min-height: 100vh;
-    background: #f5f5f5;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 24px 0;
-}
-
-.service-list-card {
-    background: #fff;
-    border-radius: 18px;
-    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
-    padding: 24px 16px 32px 16px;
-    max-width: 400px;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.title {
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 16px;
-    text-align: center;
-}
-
 .service-list {
     width: 100%;
     display: flex;
     flex-direction: column;
     gap: 16px;
-    margin-top: 12px;
 }
 
-.empty-state {
-    margin-top: 32px;
-}
-
-.mt-4 {
-    margin-top: 16px;
-}
-
+/* 移動端優化 */
 @media (min-width: 768px) {
-    .service-list-card {
-        max-width: 700px;
-        padding: 32px 32px 40px 32px;
-    }
-
     .service-list {
         flex-direction: row;
         flex-wrap: wrap;
