@@ -68,7 +68,8 @@ export const useBookingStore = defineStore('booking', {
       extraPersons: [],
       selectedStaffId: undefined
     } as BookingFormData,
-    bookingHistory: [] as BookingData[]
+    bookingHistory: [] as BookingData[],
+    editingItemIndex: null as number | null
   }),
   getters: {
     hasUnfinishedForm(state) {
@@ -76,6 +77,9 @@ export const useBookingStore = defineStore('booking', {
     },
     hasFormData(state) {
       return !!(state.formData.name || state.formData.phone || state.formData.email || state.formData.date || state.formData.timeSlot || state.formData.extraPersons.length > 0)
+    },
+    isEditMode(state) {
+      return state.editingItemIndex !== null
     }
   },
   actions: {
@@ -141,9 +145,15 @@ export const useBookingStore = defineStore('booking', {
     },
     setSelectedService(serviceId: number) {
       this.selectedServiceId = serviceId
-      this.selectedStaffId = null
-      this.formData.selectedStaffId = undefined
-      this.formData.timeSlot = ''
+      // 同步更新 formData 中的 serviceId
+      this.formData.serviceId = serviceId
+      
+      // 只在非編輯模式下清除選中的服務人員
+      if (this.editingItemIndex === null) {
+        this.selectedStaffId = null
+        this.formData.selectedStaffId = undefined
+        this.formData.timeSlot = ''
+      }
     },
     setSelectedStaff(staffId: number) {
       this.selectedStaffId = staffId
@@ -161,6 +171,16 @@ export const useBookingStore = defineStore('booking', {
     },
     updateFormData(data: Partial<BookingFormData>) {
       this.formData = { ...this.formData, ...data }
+      
+      // 如果更新了 selectedStaffId，同步到 selectedStaffId
+      if (data.selectedStaffId !== undefined) {
+        this.selectedStaffId = data.selectedStaffId || null
+      }
+      
+      // 確保 serviceId 與 selectedServiceId 保持同步
+      if (this.selectedServiceId && !this.formData.serviceId) {
+        this.formData.serviceId = this.selectedServiceId
+      }
     },
     clearFormData() {
       this.formData = {
@@ -182,13 +202,82 @@ export const useBookingStore = defineStore('booking', {
       this.clearFormData()
     },
     addBooking(booking: BookingData) {
-      const newBooking = {
-        ...booking,
-        id: Date.now().toString(),
-        status: 'pending' as const,
-        createdAt: new Date().toISOString()
+      if (this.editingItemIndex !== null) {
+        this.bookingHistory[this.editingItemIndex] = {
+          ...booking,
+          id: this.bookingHistory[this.editingItemIndex].id,
+          status: this.bookingHistory[this.editingItemIndex].status,
+          createdAt: this.bookingHistory[this.editingItemIndex].createdAt
+        }
+        this.editingItemIndex = null
+      } else {
+        const newBooking = {
+          ...booking,
+          id: Date.now().toString(),
+          status: 'pending' as const,
+          createdAt: new Date().toISOString()
+        }
+        this.bookingHistory.push(newBooking)
       }
-      this.bookingHistory.push(newBooking)
+    },
+    setEditingItemIndex(index: number | null) {
+      this.editingItemIndex = index
+    },
+    clearEditingItemIndex() {
+      this.editingItemIndex = null
+    },
+    removeBookingFromHistory(index: number) {
+      if (index >= 0 && index < this.bookingHistory.length) {
+        this.bookingHistory.splice(index, 1)
+      }
+    },
+    clearCart() {
+      this.bookingHistory = []
+    },
+    formatDateString(dateInput: string | Date): string {
+      if (!dateInput) return ''
+      
+      try {
+        const date = typeof dateInput === 'string' ? new Date(dateInput) : dateInput
+        if (isNaN(date.getTime())) return ''
+        
+        return date.toISOString().split('T')[0]
+      } catch (error) {
+        console.error('日期格式化錯誤:', error)
+        return ''
+      }
+    },
+    restorePageState() {
+      console.log('=== 恢復頁面狀態 ===')
+      
+      if (this.formData.date) {
+        const formattedDate = this.formatDateString(this.formData.date)
+        if (formattedDate !== this.formData.date) {
+          this.formData.date = formattedDate
+          console.log('✅ 日期格式已修正:', formattedDate)
+        }
+      }
+      
+      if (!this.selectedServiceId && this.formData.serviceId) {
+        this.selectedServiceId = this.formData.serviceId
+        console.log('✅ 已恢復 selectedServiceId:', this.selectedServiceId)
+      }
+      
+      if (!this.selectedStaffId && this.formData.selectedStaffId) {
+        this.selectedStaffId = this.formData.selectedStaffId
+        console.log('✅ 已恢復 selectedStaffId:', this.selectedStaffId)
+      }
+      
+      console.log('=== 狀態恢復完成 ===')
+    },
+    // 新增：完全重置所有狀態（用於新增項目）
+    resetAllState() {
+      console.log('=== 重置所有狀態 ===')
+      this.selectedServiceId = null
+      this.selectedStaffId = null
+      this.editingItemIndex = null
+      this.clearFormData()
+      console.log('✅ 所有狀態已重置')
     }
   },
   persist: {
