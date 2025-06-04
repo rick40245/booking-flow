@@ -1,0 +1,63 @@
+<context>
+# Overview
+本專案是一套基於 **Vue 3** 的「多步驟預約結帳系統」，解決小型美容／診所／工作室在網頁前端缺乏流暢預約體驗的痛點。目標族群為需要快速部署、但又希望 UI 具有彈性客製的 SaaS/內部專案團隊。透過三步驟流程與資料持久化，使用者可在桌機或手機上快速完成服務預約並查看總費用，提升轉換率。
+
+# Core Features
+| 功能 | 作用 | 重要性 | 高層運作方式 |
+|------|------|--------|--------------|
+| 服務項目列表 (Page 1) | 顯示可預約之服務，點擊「選擇」加入購物車 | 入口，決定後續表單內容 | 從 `serviceStore` 讀取靜態／API 資料 → Element Plus Card 渲染 |
+| 預約資料填寫 (Page 2) | 收集主要／額外預約人資料與服務時段 | 關鍵資料輸入，影響排程 | `el-form` +  Pinia 暫存；DatePicker 禁今日以前 |
+| 品項確認 (Page 3) | 列出所有預約品項，允許編輯/新增 | 提升用戶信心 | 讀取 `cart[]`，計算總價，提供編輯路由 |
+| 資料驗證與錯誤提示 | 即時顯示錯誤、阻止提交 | 降低填寫錯誤率 | Element Plus rules；自訂 regex 與 async validator |
+| 狀態持久化 | 重新整理亦保留資料 | 提升容錯體驗 | `pinia-plugin-persistedstate` → localStorage |
+| 流程中斷警告 | 使用者想離開時提醒 | 防止意外流失 | Router beforeEach + Dialog |
+
+# User Experience
+- **Persona A：一般顧客** — 年齡 20‑40，注重操作簡易與移動端友好  
+- **Persona B：店家前台** — 須快速為到店客人建立預約  
+**關鍵流程：**  
+1. 進入首頁 → 瀏覽服務 → **選擇**  
+2. 填寫預約人資訊 + 選日期/時段 → **確認**  
+3. 檢查內容 → **送出 / 新增品項 / 編輯**  
+**UI/UX 考量：** 行動優先、卡片式布局、重要按鈕置底 sticky、錯誤提示就近顯示
+</context>
+
+<PRD>
+# Technical Architecture
+- **前端框架**：Vue 3 + Vite  
+- **組件**：Element Plus，UnoCSS 作為原子化樣式引擎  
+- **狀態層**：Pinia (`serviceStore`, `bookingStore`, `uiStore`) + persist  
+- **資料模型**  
+  - `Service`：id, name, price, staffs[]  
+  - `Booking`：serviceId, date, slot, primaryUser, extraUsers[]  
+- **API / 整合**：目前以假資料 (`/mock/services.json`)；未來可接後端 REST `GET /services`、`POST /bookings`  
+- **基礎設施**：Node 18 LTS、Vercel / Netlify 靜態部署
+
+# Development Roadmap
+| Phase | 內容 (僅列功能，不排時間) |
+|-------|-------------------------|
+| MVP | 專案腳手架、服務列表、Page 2 表單 + 驗證、Page 3 確認、Pinia 持久化、路由守衛 |
+| P2  | 整合真實 API、付款頁、可編輯品項數 >1、Vitest 覆蓋率 80% |
+| P3  | i18n、多貨幣、a11y、E2E (Playwright)、主題客製 |
+
+# Logical Dependency Chain
+1. 建立資料模型與 Pinia store (foundation)  
+2. Page 1 UI → 選擇後寫入 store  
+3. Page 2 表單 + 驗證 → 儲存至 store  
+4. Page 3 讀取 store → 顯示、編輯返回 Page 2  
+5. 路由守衛 + 持久化 → 強化體驗  
+6. 單元測試 → 確保穩定
+
+# Risks and Mitigations
+| 風險 | 說明 | 因應 |
+|------|------|------|
+| 表單驗證複雜 | 不同人數 & 必填條件 | 抽象共用 validator，Vitest 覆蓋 |
+| 狀態同步衝突 | 多品項時資料不一致 | 使用深拷貝、明確 mutation 流程 |
+| 使用者中途跳離 | 流程資料遺失 | 路由守衛 + localStorage |
+| 時程膨脹 | 規格追加 | 嚴格刪減至 MVP，後續 P2/P3 擴充 |
+
+# Appendix
+- Wireframe: `/docs/ui/mockup.png`  
+- Element Plus DatePicker 限制範例  
+- UnoCSS 設定 `uno.config.ts`  
+</PRD>

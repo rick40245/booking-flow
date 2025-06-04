@@ -1,0 +1,15 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+重新整理頁面，需保持當前狀態
+請使用 element-ui 的 form 組件與驗證
+handle 潛在的錯誤與例外
+維持程式碼可讀性、維護性、擴充性
+使用 Typescript，且有完整的 types 定義
+使用 Vue 3 並使用 Composition API
+使用 Vue-Router
+使用 pinia 狀態管理
+使用 unocss
+使用 element-ui-plus，使用其組件組成畫面

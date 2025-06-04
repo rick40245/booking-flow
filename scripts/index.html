@@ -1,0 +1,294 @@
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>服務預約系統 Wireframe</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+  />
+</head>
+<body class="bg-white flex flex-col items-center py-6 px-2">
+  <h1 class="font-bold text-lg mb-4">服務預約系統 Wireframe</h1>
+  <div class="flex flex-col sm:flex-row gap-4 max-w-5xl w-full justify-center">
+    <!-- 頁面1 - 服務人員列表頁 -->
+    <section
+      class="bg-white rounded-lg border border-gray-300 p-4 w-full max-w-xs"
+      aria-label="頁面1 - 服務人員列表頁"
+    >
+      <h2 class="font-bold mb-3 text-center">頁面1 - 服務人員列表頁</h2>
+      <div class="mb-4">
+        <div class="relative">
+          <input
+            type="text"
+            placeholder="搜尋服務人員..."
+            class="w-full border border-gray-300 rounded-md py-2 px-3 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
+          />
+          <i
+            class="fas fa-search absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"
+            aria-hidden="true"
+          ></i>
+        </div>
+      </div>
+      <div class="space-y-4">
+        <div
+          class="border border-gray-300 rounded-md p-3 text-sm"
+          aria-label="張美容師服務人員資訊"
+        >
+          <p class="font-semibold mb-1">張美容師</p>
+          <p class="mb-1">
+            價格: <span class="font-mono">$1000</span> / 小時
+          </p>
+          <p class="mb-3">可預約: 9:00-18:00</p>
+          <button
+            class="bg-green-600 text-white rounded px-4 py-1 text-sm hover:bg-green-700"
+            type="button"
+          >
+            預約
+          </button>
+        </div>
+        <div
+          class="border border-gray-300 rounded-md p-3 text-sm"
+          aria-label="李按摩師服務人員資訊"
+        >
+          <p class="font-semibold mb-1">李按摩師</p>
+          <p class="mb-1">
+            價格: <span class="font-mono">$1200</span> / 小時
+          </p>
+          <p class="mb-3">可預約: 10:00-20:00</p>
+          <button
+            class="bg-green-600 text-white rounded px-4 py-1 text-sm hover:bg-green-700"
+            type="button"
+          >
+            預約
+          </button>
+        </div>
+        <div
+          class="border border-gray-300 rounded-md p-3 text-sm"
+          aria-label="王造型師服務人員資訊"
+        >
+          <p class="font-semibold mb-1">王造型師</p>
+          <p class="mb-1">
+            價格: <span class="font-mono">$1500</span> / 小時
+          </p>
+          <p class="mb-3">可預約: 11:00-19:00</p>
+          <button
+            class="bg-green-600 text-white rounded px-4 py-1 text-sm hover:bg-green-700"
+            type="button"
+          >
+            預約
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 頁面2 - 資料填寫頁 -->
+    <section
+      class="bg-white rounded-lg border border-gray-300 p-4 w-full max-w-xs"
+      aria-label="頁面2 - 資料填寫頁"
+    >
+      <h2 class="font-bold mb-3 text-center">頁面2 - 資料填寫頁</h2>
+      <div
+        class="bg-blue-100 border border-blue-300 rounded-md p-3 mb-4 text-sm"
+        aria-label="已選擇服務人員資訊"
+      >
+        <p class="font-semibold">已選擇: 張美容師</p>
+        <p>價格: <span class="font-mono">$1000</span> / 小時</p>
+      </div>
+      <form class="text-sm space-y-3" aria-label="預約資訊表單">
+        <fieldset>
+          <legend class="font-semibold mb-1">預約的資訊</legend>
+          <div class="flex items-center mb-2">
+            <label
+              for="booking-date"
+              class="block w-20 text-gray-700 font-normal"
+              >預約日期</label
+            >
+            <input
+              type="date"
+              id="booking-date"
+              name="booking-date"
+              class="border border-gray-300 rounded-md py-1 px-2 flex-1 text-xs"
+            />
+            <i
+              class="fas fa-calendar-alt ml-2 text-blue-600 text-lg"
+              aria-hidden="true"
+            ></i>
+          </div>
+          <div class="mb-1 text-gray-500 text-xs">可預約時段:</div>
+          <div class="grid grid-cols-3 gap-2 mb-3">
+            <button
+              type="button"
+              class="border border-gray-300 rounded-md py-1 text-xs"
+            >
+              9:00
+            </button>
+            <button
+              type="button"
+              class="border border-gray-300 rounded-md py-1 text-xs"
+            >
+              10:00
+            </button>
+            <button
+              type="button"
+              class="bg-green-600 text-white rounded-md py-1 text-xs"
+            >
+              11:00
+            </button>
+            <button
+              type="button"
+              class="border border-gray-300 rounded-md py-1 text-xs"
+            >
+              14:00
+            </button>
+            <button
+              type="button"
+              class="border border-gray-300 rounded-md py-1 text-xs"
+            >
+              15:00
+            </button>
+          </div>
+          <div class="mb-2">
+            <label for="name" class="block mb-1">姓名:</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              class="w-full border border-gray-300 rounded-md py-1 px-2 text-xs"
+            />
+          </div>
+          <div class="mb-2">
+            <label for="phone" class="block mb-1">電話</label>
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              class="w-full border border-gray-300 rounded-md py-1 px-2 text-xs"
+            />
+          </div>
+          <div class="mb-2">
+            <label for="note" class="block mb-1">備註:</label>
+            <textarea
+              id="note"
+              name="note"
+              rows="3"
+              class="w-full border border-gray-300 rounded-md py-1 px-2 text-xs resize-none"
+            ></textarea>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend class="font-semibold mb-2">額外預約的人資訊</legend>
+          <button
+            type="button"
+            class="bg-blue-600 text-white rounded px-3 py-1 mb-3 text-xs"
+          >
+            + 新增
+          </button>
+          <div class="mb-2">
+            <label for="extra-name" class="block mb-1 text-xs">姓名:</label>
+            <input
+              type="text"
+              id="extra-name"
+              name="extra-name"
+              class="w-full border border-gray-300 rounded-md py-1 px-2 text-xs"
+            />
+          </div>
+          <div class="mb-2">
+            <label for="extra-phone" class="block mb-1 text-xs">電話:</label>
+            <input
+              type="tel"
+              id="extra-phone"
+              name="extra-phone"
+              class="w-full border border-gray-300 rounded-md py-1 px-2 text-xs"
+            />
+          </div>
+          <button
+            type="button"
+            class="bg-green-600 text-white rounded px-4 py-1 text-xs float-right"
+          >
+            確認
+          </button>
+        </fieldset>
+        <button
+          type="submit"
+          class="w-full bg-orange-500 text-white font-bold rounded py-2 text-sm mt-4"
+        >
+          確認資料並加入購物車
+        </button>
+      </form>
+    </section>
+
+    <!-- 頁面3 - 品項確認頁 -->
+    <section
+      class="bg-white rounded-lg border border-gray-300 p-4 w-full max-w-xs"
+      aria-label="頁面3 - 品項確認頁"
+    >
+      <h2 class="font-bold mb-3 text-center">頁面3 - 品項確認頁</h2>
+      <div
+        class="border border-gray-300 rounded-md p-3 mb-3 text-sm"
+        aria-label="預約項目1"
+      >
+        <p class="font-semibold mb-1">預約項目 #1</p>
+        <p>服務人員: 張美容師</p>
+        <p>日期時間: 2025/5/20 11:00</p>
+        <p>價格: <span class="font-mono">$1000</span></p>
+        <p>主要預約人: 王小明</p>
+        <div class="mt-2 flex gap-2">
+          <button
+            type="button"
+            class="bg-blue-600 text-white rounded px-3 py-1 text-xs"
+          >
+            編輯
+          </button>
+          <button
+            type="button"
+            class="bg-red-600 text-white rounded px-3 py-1 text-xs"
+          >
+            刪除
+          </button>
+        </div>
+      </div>
+      <div
+        class="border border-gray-300 rounded-md p-3 mb-3 text-sm"
+        aria-label="預約項目2"
+      >
+        <p class="font-semibold mb-1">預約項目 #2</p>
+        <p>服務人員: 李按摩師</p>
+        <p>日期時間: 2025/5/21 14:00</p>
+        <p>價格: <span class="font-mono">$1200</span></p>
+        <p>主要預約人: 王小明</p>
+        <div class="mt-2 flex gap-2">
+          <button
+            type="button"
+            class="bg-blue-600 text-white rounded px-3 py-1 text-xs"
+          >
+            編輯
+          </button>
+          <button
+            type="button"
+            class="bg-red-600 text-white rounded px-3 py-1 text-xs"
+          >
+            刪除
+          </button>
+        </div>
+      </div>
+      <button
+        type="button"
+        class="w-full bg-blue-600 text-white rounded py-2 mb-3 text-sm"
+      >
+        + 新增預約項目
+      </button>
+      <button
+        type="button"
+        class="w-full bg-orange-500 text-white rounded py-2 text-sm"
+      >
+        前往結帳
+      </button>
+    </section>
+  </div>
+  <p class="mt-4 text-xs text-center text-gray-700 font-semibold">
+    手機版視圖 - 響應式設計
+  </p>
+</body>
+</html>
