@@ -16,7 +16,7 @@
                 服務人員: {{ service.staffList.join('、') }}
             </div>
         </div>
-        <el-button type="success" @click="emit('select', service.id)">
+        <el-button type="submit" @click="emit('select', service.id)">
             {{ isSelected ? '已選擇' : '選擇' }}
         </el-button>
     </div>
