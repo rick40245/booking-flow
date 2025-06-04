@@ -13,3 +13,6 @@ handle 潛在的錯誤與例外
 使用 pinia 狀態管理
 使用 unocss
 使用 element-ui-plus，使用其組件組成畫面
+---
+Whenever you want to ask a question, always call the MCP interactive-feedback.
+Whenever you’re about to complete a user request, call the MCP interactive-feedback instead of simply ending the process. Keep calling MCP until the user’s feedback is empty, then end the request.
