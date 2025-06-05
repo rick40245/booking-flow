@@ -19,15 +19,15 @@ export type ValidationCallback = (error?: Error) => void
  */
 export type ValidatorFunction = (
   rule: unknown,
-  value: any,
-  callback: ValidationCallback
+  value: unknown,
+  callback: ValidationCallback,
 ) => void | Promise<void>
 
 /**
  * 表單驗證規則類型
  * Element Plus FormRules 的增強版本
  */
-export type FormRules<T = any> = Partial<Record<keyof T, FormItemRule[]>>
+export type FormRules<T = Record<string, unknown>> = Partial<Record<keyof T, FormItemRule[]>>
 
 /**
  * 驗證觸發時機
@@ -75,7 +75,7 @@ export interface ValidationState {
 /**
  * 表單欄位定義
  */
-export interface FormField<T = any> {
+export interface FormField<T = Record<string, unknown>> {
   /** 欄位名稱 */
   name: keyof T
   /** 欄位標籤 */
@@ -83,7 +83,7 @@ export interface FormField<T = any> {
   /** 欄位類型 */
   type: 'text' | 'number' | 'email' | 'tel' | 'date' | 'select' | 'radio' | 'checkbox' | 'textarea'
   /** 預設值 */
-  defaultValue?: any
+  defaultValue?: unknown
   /** 占位符 */
   placeholder?: string
   /** 是否必填 */
@@ -97,17 +97,17 @@ export interface FormField<T = any> {
   /** 選項（用於 select, radio, checkbox） */
   options?: Array<{
     label: string
-    value: any
+    value: unknown
     disabled?: boolean
   }>
   /** 其他屬性 */
-  props?: Record<string, any>
+  props?: Record<string, unknown>
 }
 
 /**
  * 表單配置
  */
-export interface FormConfig<T = any> {
+export interface FormConfig<T = Record<string, unknown>> {
   /** 表單欄位 */
   fields: FormField<T>[]
   /** 標籤寬度 */
@@ -150,7 +150,7 @@ export interface DynamicFormItem {
   /** 唯一標識 */
   id: string | number
   /** 表單資料 */
-  data: Record<string, any>
+  data: Record<string, unknown>
   /** 驗證規則 */
   rules?: FormRules
   /** 是否展開/顯示 */
@@ -160,9 +160,9 @@ export interface DynamicFormItem {
 /**
  * 表單提交處理器
  */
-export type FormSubmitHandler<T = any> = (
+export type FormSubmitHandler<T = Record<string, unknown>> = (
   data: T,
-  isValid: boolean
+  isValid: boolean,
 ) => void | Promise<void>
 
 /**
@@ -173,23 +173,21 @@ export type FormResetHandler = () => void
 /**
  * 欄位變更處理器
  */
-export type FieldChangeHandler<T = any> = (
+export type FieldChangeHandler<T = Record<string, unknown>> = (
   field: keyof T,
-  value: any,
-  oldValue: any
+  value: unknown,
+  oldValue: unknown,
 ) => void
 
 /**
  * 驗證錯誤處理器
  */
-export type ValidationErrorHandler = (
-  errors: ValidationResult['errors']
-) => void
+export type ValidationErrorHandler = (errors: ValidationResult['errors']) => void
 
 /**
  * 表單事件
  */
-export interface FormEvents<T = any> {
+export interface FormEvents<T = Record<string, unknown>> {
   /** 提交事件 */
   onSubmit?: FormSubmitHandler<T>
   /** 重置事件 */
@@ -217,7 +215,7 @@ export interface FormMethods {
   /** 滾動到錯誤欄位 */
   scrollToField(field: string): void
   /** 取得表單資料 */
-  getFormData(): Record<string, any>
+  getFormData(): Record<string, unknown>
   /** 設定表單資料 */
-  setFormData(data: Record<string, any>): void
-} 
+  setFormData(data: Record<string, unknown>): void
+}

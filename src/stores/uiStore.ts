@@ -4,13 +4,20 @@ export interface FormErrors {
   [key: string]: string
 }
 
+export interface ModalContent {
+  title?: string
+  content?: string
+  type?: 'info' | 'warning' | 'error' | 'success'
+  [key: string]: unknown
+}
+
 export const useUiStore = defineStore('ui', {
   state: () => ({
     currentStep: 1,
     isLoading: false,
     formErrors: {} as FormErrors,
     modalOpen: false,
-    modalContent: null as any
+    modalContent: null as ModalContent | null,
   }),
   actions: {
     setStep(step: number) {
@@ -25,14 +32,14 @@ export const useUiStore = defineStore('ui', {
     clearFormErrors() {
       this.formErrors = {}
     },
-    openModal(content: any) {
+    openModal(content: ModalContent) {
       this.modalContent = content
       this.modalOpen = true
     },
     closeModal() {
       this.modalOpen = false
       this.modalContent = null
-    }
+    },
   },
-  persist: true
-}) 
+  persist: true,
+})

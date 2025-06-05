@@ -14,9 +14,11 @@ export interface UserInfo {
 
 /**
  * 額外預約人介面
+ * 繼承自 UserInfo，目前與 UserInfo 相同，但保留此接口以便未來擴展額外預約人特有的欄位
  */
 export interface ExtraPerson extends UserInfo {
-  // 未來可擴充其他欄位
+  /** 額外預約人的特殊需求或備註 */
+  specialRequests?: string
 }
 
 /**
@@ -173,4 +175,4 @@ export interface BookingListResponse {
   pageSize: number
   /** 總頁數 */
   totalPages: number
-} 
+}
