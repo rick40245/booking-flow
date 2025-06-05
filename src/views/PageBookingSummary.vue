@@ -114,45 +114,31 @@ const bookingItems = computed(() => {
 })
 
 function editItem(originalIndex: number) {
-    console.log('=== editItem 被呼叫 ===')
-    console.log('originalIndex:', originalIndex)
-    console.log('bookingHistory length:', bookingStore.bookingHistory.length)
-
     const itemToEdit = bookingStore.bookingHistory[originalIndex]
-    console.log('itemToEdit:', itemToEdit)
 
     if (itemToEdit) {
         // 將要編輯的項目資料填充到 formData
         bookingStore.formData = { ...itemToEdit }
-        console.log('formData updated:', bookingStore.formData)
 
         // 設定編輯模式和索引
         bookingStore.setEditingItemIndex(originalIndex)
-        console.log('editing index set to:', originalIndex)
 
         // 設定選中的服務（重要：讓頁面2知道當前選擇的服務）
         if (itemToEdit.serviceId) {
             bookingStore.setSelectedService(itemToEdit.serviceId)
-            console.log('selectedService set to:', itemToEdit.serviceId)
         }
 
         // 跳轉回 PageBookingForm
-        console.log('準備跳轉到 booking-form')
         router.push({ name: 'booking-form' }).then(() => {
-            console.log('✅ 成功跳轉到 booking-form')
         }).catch((error) => {
             console.error('❌ 跳轉失敗:', error)
         })
     } else {
-        console.error('❌ 找不到要編輯的項目')
         ElMessage.error('找不到要編輯的項目')
     }
 }
 
 async function removeItem(originalIndex: number) {
-    console.log('=== removeItem 被呼叫 ===')
-    console.log('originalIndex:', originalIndex)
-
     try {
         await ElMessageBox.confirm(
             '確定要刪除此預約項目嗎？',
@@ -163,12 +149,9 @@ async function removeItem(originalIndex: number) {
                 type: 'warning',
             }
         )
-        console.log('用戶確認刪除')
         bookingStore.removeBookingFromHistory(originalIndex)
-        console.log('項目已從 bookingHistory 移除')
         ElMessage.success('項目已刪除')
     } catch (error) {
-        console.log('用戶取消刪除或發生錯誤:', error)
         if (error !== 'cancel') {
             ElMessage.error('刪除失敗')
         }
@@ -176,15 +159,12 @@ async function removeItem(originalIndex: number) {
 }
 
 function addNewItem() {
-    console.log('=== addNewItem 被呼叫 ===')
 
     // 完全重置所有狀態
     bookingStore.resetAllState()
 
     // 跳轉到頁面1
-    console.log('準備跳轉到 service-list')
     router.push({ name: 'service-list' }).then(() => {
-        console.log('✅ 成功跳轉到 service-list')
     }).catch((error) => {
         console.error('❌ 跳轉失敗:', error)
     })
@@ -197,14 +177,12 @@ function goToCheckout() {
 onBeforeRouteLeave((to, from, next) => {
     // 如果是跳轉到 service-list（新增項目）或 booking-form（編輯項目），允許跳轉
     if (to.name === 'service-list' || to.name === 'booking-form') {
-        console.log('✅ 允許跳轉到:', to.name)
         next()
         return
     }
 
     // 其他情況下，如果有預約項目，顯示確認對話框
     if (bookingItems.value.length > 0) {
-        console.log('⚠️ 有預約項目，顯示確認對話框')
         showConfirmDialog.value = true
         nextCallback = () => {
             bookingStore.clearCart()
@@ -212,7 +190,6 @@ onBeforeRouteLeave((to, from, next) => {
         }
         next(false)
     } else {
-        console.log('✅ 沒有預約項目，允許跳轉')
         next()
     }
 })

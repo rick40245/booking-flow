@@ -1,6 +1,6 @@
 <template>
     <PageContainer :title="pageTitle" max-width="lg">
-        <!-- 已選擇服務項目卡片 -->
+        <!-- Selected service item card -->
         <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-5">
             <p class="font-semibold text-sm mb-1 text-gray-800">已選擇: {{ selectedServiceName }}</p>
             <p class="text-sm text-gray-800 m-0">
@@ -14,26 +14,26 @@
             </p>
         </div>
 
-        <!-- 預約資訊表單 -->
+        <!-- Booking information form -->
         <div class="bg-white rounded-lg p-4 mb-4 shadow-sm">
             <div class="font-semibold text-sm mb-4 text-gray-800">預約資訊</div>
 
             <el-form :model="bookingForm" :rules="formRules" ref="formRef" label-position="top">
-                <!-- 預約人數 -->
+                <!-- Number of people -->
                 <el-form-item label="預約總人數" prop="totalPeople">
                     <el-input-number v-model="bookingForm.totalPeople" :min="BOOKING_LIMITS.MIN_PEOPLE" :max="BOOKING_LIMITS.MAX_PEOPLE" size="default"
                         style="width: 100%;" />
                 </el-form-item>
 
-                <!-- 主要預約人資訊標題 -->
+                <!-- Main booker information title -->
                 <div class="text-sm font-semibold text-gray-800 my-5">主要預約人資訊</div>
 
-                <!-- 姓名 -->
+                <!-- Name -->
                 <el-form-item label="姓名" prop="name">
                     <el-input v-model="bookingForm.name" maxlength="20" show-word-limit size="default" />
                 </el-form-item>
 
-                <!-- 電話 -->
+                <!-- Phone -->
                 <el-form-item label="電話" prop="phone">
                     <el-input v-model="bookingForm.phone" placeholder="09xxxxxxxx" size="default" />
                     <el-text type="info" size="small">
@@ -45,7 +45,7 @@
                     <el-input v-model="bookingForm.email" type="email" size="default" />
                 </el-form-item>
 
-                <!-- 選擇服務人員 -->
+                <!-- Select service staff -->
                 <div class="mb-4">
                     <div class="text-xs text-gray-600 mb-2">選擇服務人員 <span class="text-red-500 ml-1">*</span></div>
                     <div v-if="availableStaff.length > 0" class="flex gap-2 overflow-x-auto pb-1">
@@ -72,13 +72,13 @@
                     </div>
                 </div>
 
-                <!-- 預約日期 -->
+                <!-- Booking date -->
                 <el-form-item label="選擇服務日期" prop="date">
                     <el-date-picker v-model="bookingForm.date" type="date" placeholder="選擇日期"
                         :disabled-date="disabledDate" size="default" style="width: 100%;" />
                 </el-form-item>
 
-                <!-- 可預約時段 -->
+                <!-- Available time slots -->
                 <div class="mb-4">
                     <div class="text-xs text-gray-600 mb-2">
                         選擇服務時段 <span class="text-red-500 ml-1">*</span>
@@ -115,7 +115,7 @@
             </el-form>
         </div>
 
-        <!-- 額外預約人資訊 -->
+        <!-- Additional booker information -->
         <div v-if="bookingForm.totalPeople > 1" class="bg-white rounded-lg p-4 mb-5">
             <div class="font-semibold text-sm mb-4 text-gray-800">
                 額外預約人資訊
@@ -136,7 +136,7 @@
                 </div>
             </div>
 
-            <!-- 額外預約人列表 -->
+            <!-- Additional bookers list -->
             <div v-if="extraPersons.length > 0" class="mb-3">
                 <div v-for="(person, index) in extraPersons" :key="index" class="bg-gray-50 rounded p-3 mb-2 flex justify-between items-start">
                     <div class="flex-1">
@@ -153,20 +153,20 @@
                 </div>
             </div>
 
-            <!-- 空狀態提示 -->
+            <!-- Empty state message -->
             <div v-else class="text-center text-gray-500 text-xs p-5 bg-gray-50 rounded border border-dashed border-gray-300">
                 <el-text type="info">請點選上方按鈕新增額外預約人資訊</el-text>
             </div>
         </div>
 
-        <!-- 提交按鈕區域 -->
+        <!-- Submit button area -->
         <div class="sticky bottom-0 p-4 bg-white border-t border-gray-200">
             <el-button type="primary" size="large" @click="submitForm" class="w-full p-3 bg-blue-500 border-blue-500 text-base font-semibold">
                 確認預約
             </el-button>
         </div>
 
-        <!-- 額外預約人 Dialog (內聯版本) -->
+        <!-- Additional booker Dialog (inline version) -->
         <el-dialog :model-value="extraPersonDialogVisible" title="新增額外預約人" width="350px"
             @update:model-value="extraPersonDialogVisible = $event" :close-on-click-modal="false">
             <el-form :model="extraPersonForm" :rules="extraPersonRules" ref="extraPersonFormRef" label-width="60px"
@@ -191,7 +191,7 @@
             </template>
         </el-dialog>
 
-        <!-- 流程中斷警告 -->
+        <!-- Process interruption warning -->
         <ConfirmDialog v-model:visible="showConfirm" @confirm="handleLeave" @cancel="showConfirm = false" />
     </PageContainer>
 </template>
@@ -253,14 +253,14 @@ const isFormSubmitted = ref(false)
 // Enhanced navigation context handling with proper typing
 let pendingNavigationContext: RouteNavigationContext | null = null
 
-// 額外預約人表單
+// Additional booker form
 const extraPersonForm = ref({
     name: '',
     phone: '',
     email: ''
 })
 
-// 表單資料 - 改用更直接的響應式綁定
+// Form data - using more direct reactive binding
 const bookingForm = computed({
     get: () => bookingStore.formData,
     set: (val) => {
@@ -268,7 +268,7 @@ const bookingForm = computed({
     }
 })
 
-// 額外預約人列表 - 改用 computed 雙向綁定到 store
+// Additional bookers list - using computed two-way binding to store
 const extraPersons = computed({
     get: () => bookingStore.formData.extraPersons,
     set: (val) => {
@@ -276,41 +276,41 @@ const extraPersons = computed({
     }
 })
 
-// 計算新增額外預約人的限制
+// Calculate limit for adding additional bookers
 const isAddPersonDisabled = computed(() => {
     return extraPersons.value.length >= bookingForm.value.totalPeople - 1
 })
 
-// 檢查是否為編輯模式
+// Check if in edit mode
 const isEditMode = computed(() => {
     return bookingStore.isEditMode
 })
 
-// 頁面標題 - 根據編輯模式動態顯示
+// Page title - dynamically display based on edit mode
 const pageTitle = computed(() => {
     return isEditMode.value ? '頁面2 - 編輯預約' : '頁面2 - 預約表單'
 })
 
-// 目前選中的服務類型
+// Currently selected service type
 const selectedServiceType = computed(() => {
     if (!bookingStore.selectedServiceId) return null
     return serviceStore.getServiceTypeById(bookingStore.selectedServiceId)
 })
 
-// 根據服務類型獲取可用的服務人員 - 加入過濾以確保不為 null
+// Get available staff by service type - filter to ensure not null
 const availableStaff = computed(() => {
     if (!selectedServiceType.value) return []
     return serviceStore.getStaffByServiceType(selectedServiceType.value).filter(staff => staff !== null)
 })
 
-// 取得已選擇服務的名稱和價格（用於頂部卡片顯示）
+// Get selected service name and price (for top card display)
 const selectedServiceName = computed(() => {
     if (bookingForm.value.selectedStaffId) {
-        // 如果已選擇服務人員，顯示服務人員名稱
+        // If staff is selected, show staff name
         const selectedStaff = serviceStore.getStaffById(bookingForm.value.selectedStaffId)
         return selectedStaff ? selectedStaff.name : ''
     } else if (selectedServiceType.value) {
-        // 如果還沒選擇服務人員，顯示中文服務名稱
+        // If no staff selected yet, show Chinese service name
         const service = serviceStore.services.find(s => s.serviceType === selectedServiceType.value)
         return service ? service.name : selectedServiceType.value
     }
@@ -319,11 +319,11 @@ const selectedServiceName = computed(() => {
 
 const selectedServicePrice = computed(() => {
     if (bookingForm.value.selectedStaffId) {
-        // 如果已選擇服務人員，顯示該服務人員的價格
+        // If staff is selected, show that staff's price
         const selectedStaff = serviceStore.getStaffById(bookingForm.value.selectedStaffId)
         return selectedStaff ? selectedStaff.price : 0
     } else {
-        // 如果還沒選擇服務人員，顯示價格範圍
+        // If no staff selected yet, show price range
         const validStaff = availableStaff.value.filter(staff => staff !== null)
         const prices = validStaff.map(staff => staff!.price)
         if (prices.length === 0) return 0
@@ -333,7 +333,7 @@ const selectedServicePrice = computed(() => {
     }
 })
 
-// 可用時段 - 根據選中的服務人員和日期動態生成
+// Available time slots - dynamically generated based on selected staff and date
 const availableSlots = computed(() => {
     if (!bookingForm.value.selectedStaffId) return []
 
@@ -343,7 +343,7 @@ const availableSlots = computed(() => {
     return serviceStore.getAvailableSlots(staffId, selectedDate)
 })
 
-// 表單驗證規則
+// Form validation rules
 const formRules: FormRules = {
     totalPeople: [
         createRequiredRule('請選擇預約人數', 'change')
@@ -361,62 +361,54 @@ const formRules: FormRules = {
     ]
 }
 
-// 禁用今日之前的日期
+// Disable dates before today
 function disabledDate(date: Date): boolean {
     return isDateBeforeToday(date)
 }
 
-// 選擇服務人員
+// Select staff
 function selectStaff(staff: StaffMember): void {
     bookingStore.setSelectedStaff(staff.staffId)
 }
 
-// 選擇時段 - 直接修改 store 的 formData
+// Select time slot - directly modify store's formData
 function selectTimeSlot(slot: string): void {
     bookingStore.formData.timeSlot = slot
 }
 
-// 開啟額外預約人Dialog
+// Open additional booker dialog
 function openExtraPersonDialog(): void {
-    console.log('openExtraPersonDialog called')
-    console.log('isAddPersonDisabled:', isAddPersonDisabled.value)
-    console.log('extraPersons.length:', extraPersons.value.length)
-    console.log('totalPeople:', bookingForm.value.totalPeople)
-
-    // 先重置表單
+    // Reset form first
     resetExtraPersonForm()
 
     extraPersonDialogVisible.value = true
-    console.log('extraPersonDialogVisible set to:', extraPersonDialogVisible.value)
 }
 
-// 新增額外預約人
+// Add additional booker
 function addExtraPerson(person: { name: string, phone: string, email: string }): void {
     bookingStore.formData.extraPersons.push(person)
 }
 
-// 處理確認新增額外預約人
+// Handle confirm adding additional booker
 function handleConfirmExtraPerson(): void {
-    console.log('handleConfirmExtraPerson called')
     isSubmittingExtraPerson.value = true
 
     extraPersonFormRef.value?.validate((valid) => {
         isSubmittingExtraPerson.value = false
 
         if (valid) {
-            // 清理資料
+            // Clean data
             const cleanedData = {
                 name: extraPersonForm.value.name.trim(),
                 phone: extraPersonForm.value.phone.trim(),
                 email: extraPersonForm.value.email.trim()
             }
 
-            console.log('Adding extra person:', cleanedData)
             addExtraPerson(cleanedData)
             extraPersonDialogVisible.value = false
             resetExtraPersonForm()
 
-            // 顯示成功訊息
+            // Show success message
             ElMessage.success('已新增額外預約人')
         } else {
             ElMessage.error('請檢查填寫資料')
@@ -424,105 +416,79 @@ function handleConfirmExtraPerson(): void {
     })
 }
 
-// 處理取消新增額外預約人
+// Handle cancel adding additional booker
 function handleCancelExtraPerson(): void {
-    console.log('handleCancelExtraPerson called')
     extraPersonDialogVisible.value = false
     resetExtraPersonForm()
 }
 
-// 重置額外預約人表單
+// Reset additional booker form
 function resetExtraPersonForm(): void {
     extraPersonForm.value = { name: '', phone: '', email: '' }
-    // 使用 nextTick 確保在下一個 tick 清除驗證
+    // Use nextTick to ensure validation is cleared in next tick
     nextTick(() => {
         extraPersonFormRef.value?.clearValidate()
     })
 }
 
-// 移除額外預約人
+// Remove additional booker
 function removeExtraPerson(index: number): void {
     bookingStore.formData.extraPersons.splice(index, 1)
 }
 
-// 提交表單
+// Submit form
 function submitForm(): void {
-    console.log('=== 開始提交表單 ===')
-    console.log('bookingForm.value:', bookingForm.value)
-    console.log('extraPersons.value:', extraPersons.value)
-
     if (!bookingForm.value.selectedStaffId) {
-        console.log('❌ 沒有選擇服務人員')
         ElMessage.error('請選擇服務人員')
         return
     }
-    console.log('✅ 已選擇服務人員:', bookingForm.value.selectedStaffId)
 
     if (!bookingForm.value.timeSlot) {
-        console.log('❌ 沒有選擇預約時段')
         ElMessage.error('請選擇預約時段')
         return
     }
-    console.log('✅ 已選擇時段:', bookingForm.value.timeSlot)
 
-    console.log('🔍 開始表單驗證...')
     formRef.value?.validate((valid) => {
-        console.log('表單驗證結果:', valid)
         if (valid) {
-            // 檢查額外預約人數量
+            // Check additional booker count
             const requiredExtraPersons = bookingForm.value.totalPeople - 1
             const currentExtraPersons = extraPersons.value.length
 
-            console.log('預約人數檢查:')
-            console.log('- 總人數:', bookingForm.value.totalPeople)
-            console.log('- 需要額外人數:', requiredExtraPersons)
-            console.log('- 當前額外人數:', currentExtraPersons)
-
             if (currentExtraPersons < requiredExtraPersons) {
-                console.log('❌ 額外預約人不足')
                 ElMessage.error(`還需要新增 ${requiredExtraPersons - currentExtraPersons} 位額外預約人`)
                 return
             }
 
             if (currentExtraPersons > requiredExtraPersons) {
-                console.log('❌ 額外預約人超過限制')
                 ElMessage.error('額外預約人數量超過限制，請移除多餘的預約人')
                 return
             }
 
-            console.log('✅ 額外預約人數量檢查通過')
 
-            // 準備儲存的資料
+            // Prepare data to save
             const dataToSave: BookingData = {
                 ...bookingForm.value,
                 extraPersons: extraPersons.value,
                 serviceId: bookingStore.selectedServiceId || undefined,
             }
-            console.log('準備儲存的資料:', dataToSave)
 
-            // 更新 formData (如果需要保持當前表單狀態，例如用於返回編輯)
+            // Update formData (if need to maintain current form state, e.g., for returning to edit)
             bookingStore.setBookingData(dataToSave)
-            console.log('✅ 資料已更新到 store.formData')
 
-            // 將預約資料加入到 bookingHistory
+            // Add booking data to bookingHistory
             bookingStore.addBooking(dataToSave)
-            console.log('✅ 資料已新增到 store.bookingHistory')
 
-            // 設定表單已提交標記，避免路由守衛攔截
+            // Set form submitted flag to avoid route guard interception
             isFormSubmitted.value = true
 
-            // 跳轉到頁面3
-            console.log('🚀 準備跳轉到 booking-summary')
+            // Navigate to page 3
             router.push({ name: ROUTE_NAMES.BOOKING_SUMMARY }).then(() => {
-                console.log('✅ 成功跳轉到 booking-summary')
-                // 成功跳轉後，可以考慮清除 Page 2 的 formData，除非你的編輯流程需要它
+                // After successful navigation, consider clearing Page 2's formData unless edit flow needs it
                 // bookingStore.clearFormData() 
             }).catch((error) => {
                 console.error('❌ 跳轉失敗:', error)
                 isFormSubmitted.value = false
             })
-        } else {
-            console.log('❌ 表單驗證失敗')
         }
     })
 }
@@ -540,7 +506,7 @@ function handleLeave(): void {
 
         // Always navigate back to page 1 (service list) when confirming to leave
         router.push({ name: 'service-list' }).then(() => {
-            console.log('✅ Successfully navigated back to service list page')
+            // Successfully navigated back to service list page
         }).catch((error) => {
             console.error('❌ Failed to navigate back to service list:', error)
             // Fallback: try to navigate to home or show error message
@@ -566,19 +532,16 @@ onBeforeRouteLeave((to, from, next) => {
     try {
         // If form was successfully submitted, allow navigation to booking-summary
         if (isFormSubmitted.value && to.name === 'booking-summary') {
-            console.log('✅ Form submitted, allowing navigation to booking-summary')
             next()
             return
         }
 
         // Check if user has form data that would be lost
         if (bookingStore.hasFormData) {
-            console.log('⚠️ User has unsaved form data, showing confirmation dialog')
             showConfirm.value = true
             pendingNavigationContext = { to, from, next }
             next(false) // Block navigation
         } else {
-            console.log('✅ No form data, allowing navigation')
             next() // Allow navigation
         }
     } catch (error) {
@@ -595,7 +558,6 @@ watch(showConfirm, (val) => {
         // When dialog is closed via cancel, prevent navigation
         if (!val && pendingNavigationContext) {
             const { next } = pendingNavigationContext
-            console.log('🚫 Dialog cancelled, blocking navigation')
             next(false) // Cancel navigation
             pendingNavigationContext = null
         }
@@ -606,10 +568,10 @@ watch(showConfirm, (val) => {
     }
 })
 
-// 監聽日期變化，清空已選時段
+// Watch date changes, clear selected time slot
 watch(() => bookingForm.value.date, (newDate, oldDate) => {
     if (newDate !== oldDate && bookingForm.value.timeSlot) {
-        // 檢查已選時段是否在新日期的可用時段中
+        // Check if selected time slot is available on new date
         if (bookingForm.value.selectedStaffId) {
             const newAvailableSlots = serviceStore.getAvailableSlots(
                 bookingForm.value.selectedStaffId,
@@ -617,20 +579,20 @@ watch(() => bookingForm.value.date, (newDate, oldDate) => {
             )
 
             if (!newAvailableSlots.includes(bookingForm.value.timeSlot)) {
-                bookingStore.formData.timeSlot = '' // 清空已選時段
+                bookingStore.formData.timeSlot = '' // Clear selected time slot
             }
         }
     }
 })
 
-// 監聽服務人員變化，清空已選時段
+// Watch staff changes, clear selected time slot
 watch(() => bookingForm.value.selectedStaffId, (newStaffId, oldStaffId) => {
     if (newStaffId !== oldStaffId) {
-        bookingStore.formData.timeSlot = '' // 清空已選時段
+        bookingStore.formData.timeSlot = '' // Clear selected time slot
     }
 })
 
-// 監聽人數變化，清理多餘的額外預約人
+// Watch people count changes, cleanup excess additional bookers
 watch(() => bookingForm.value.totalPeople, (newVal) => {
     const maxExtra = newVal - 1
     if (bookingStore.formData.extraPersons.length > maxExtra) {
@@ -638,76 +600,50 @@ watch(() => bookingForm.value.totalPeople, (newVal) => {
     }
 })
 
-// 初始化時檢查選中的服務
+// Check selected service on initialization
 onMounted(() => {
-    console.log('=== PageBookingForm onMounted ===')
-    console.log('isEditMode:', isEditMode.value)
-    console.log('editingItemIndex:', bookingStore.editingItemIndex)
-    console.log('初始狀態 - selectedServiceId:', bookingStore.selectedServiceId)
-    console.log('初始狀態 - selectedStaffId:', bookingStore.selectedStaffId)
-    console.log('初始狀態 - formData:', bookingForm.value)
 
-    // 首先恢復頁面狀態（處理頁面重新整理的情況）
+    // First restore page state (handle page refresh scenario)
     bookingStore.restorePageState()
 
-    console.log('恢復後的狀態:')
-    console.log('- selectedServiceId:', bookingStore.selectedServiceId)
-    console.log('- selectedStaffId:', bookingStore.selectedStaffId)
-    console.log('- selectedServiceType:', selectedServiceType.value)
-    console.log('- selectedServiceName:', selectedServiceName.value)
-    console.log('- selectedServicePrice:', selectedServicePrice.value)
-    console.log('- availableStaff.length:', availableStaff.value.length)
-    console.log('- formData.date:', bookingForm.value.date)
-    console.log('- formData.timeSlot:', bookingForm.value.timeSlot)
-
-    // 檢查是否為編輯模式
+    // Check if in edit mode
     if (isEditMode.value) {
-        console.log('✅ 編輯模式 - 資料已從 Summary 頁面載入')
+        // Edit mode - data loaded from Summary page
     } else {
-        console.log('新增模式或頁面重新整理後的恢復模式')
+        // Add mode or recovery mode after page refresh
     }
 
-    // 驗證必要的資料是否存在
+    // Validate essential data exists
     const hasValidService = !!bookingStore.selectedServiceId
     const hasValidServiceType = !!selectedServiceType.value
     const hasAvailableStaff = availableStaff.value.length > 0
 
-    console.log('資料完整性檢查:')
-    console.log('- hasValidService:', hasValidService)
-    console.log('- hasValidServiceType:', hasValidServiceType)
-    console.log('- hasAvailableStaff:', hasAvailableStaff)
-
-    // 如果關鍵資料缺失且不是編輯模式，跳轉回頁面1
+    // If essential data is missing and not in edit mode, navigate back to page 1
     if (!hasValidService || !hasValidServiceType) {
         if (!isEditMode.value) {
-            console.log('❌ 關鍵資料缺失，跳轉回頁面1')
             router.push({ name: 'service-list' })
             return
-        } else {
-            console.log('⚠️ 編輯模式下發現資料缺失，但允許繼續')
         }
     }
-
-    console.log('=== onMounted 完成 ===')
 })
 
-// 電話或Email必填驗證器
+// Phone or Email required validator
 function phoneOrEmailRequired(_: unknown, __: string, callback: ValidationCallback): void {
     const phoneOrEmailValidator = createPhoneOrEmailValidator(extraPersonForm.value)
     phoneOrEmailValidator(_, __, callback)
 }
 
-// 台灣手機號碼驗證器
+// Taiwan mobile phone validator
 function validatePhone(_: unknown, value: string, callback: ValidationCallback): void {
     validateTaiwanPhone(_, value, callback)
 }
 
-// Email格式驗證器
+// Email format validator
 function validateEmail(_: unknown, value: string, callback: ValidationCallback): void {
     validateEmailFormat(_, value, callback)
 }
 
-// 額外預約人表單驗證規則
+// Additional booker form validation rules
 const extraPersonRules: FormRules = {
     name: [
         createRequiredRule('請輸入姓名', 'blur'),

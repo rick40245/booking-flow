@@ -364,12 +364,10 @@ export const useBookingStore = defineStore('booking', {
      * 重置所有狀態（用於新增項目）
      */
     resetAllState() {
-      console.log('=== 重置所有狀態 ===')
       this.selectedServiceId = null
       this.selectedStaffId = null
       this.editingItemIndex = null
       this.clearFormData()
-      console.log('✅ 所有狀態已重置')
     },
     
     // ========== 工具方法 ==========
@@ -386,30 +384,24 @@ export const useBookingStore = defineStore('booking', {
      * 恢復頁面狀態（處理頁面重新整理）
      */
     restorePageState() {
-      console.log('=== 恢復頁面狀態 ===')
-      
       // 修正日期格式
       if (this.formData.date) {
         const formattedDate = formatISODate(this.formData.date)
         if (formattedDate !== this.formData.date) {
           this.formData.date = formattedDate
-          console.log('✅ 日期格式已修正:', formattedDate)
         }
       }
       
       // 恢復服務選擇狀態
       if (!this.selectedServiceId && this.formData.serviceId) {
         this.selectedServiceId = this.formData.serviceId
-        console.log('✅ 已恢復 selectedServiceId:', this.selectedServiceId)
       }
       
       // 恢復服務人員選擇狀態
       if (!this.selectedStaffId && this.formData.selectedStaffId) {
         this.selectedStaffId = this.formData.selectedStaffId
-        console.log('✅ 已恢復 selectedStaffId:', this.selectedStaffId)
       }
       
-      console.log('=== 狀態恢復完成 ===')
     },
     
     // ========== 舊版方法（待移除） ==========

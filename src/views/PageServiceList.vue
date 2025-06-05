@@ -77,5 +77,4 @@ function handleLeave() {
     // Handle leaving the service
 }
 
-console.log('serviceTypes:', serviceTypes.value)
 </script>
