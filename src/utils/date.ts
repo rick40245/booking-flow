@@ -12,15 +12,15 @@ import { TIME_FORMATS } from '@/constants/booking'
  */
 export function formatDisplayDate(dateInput: string | Date | null | undefined): string {
   if (!dateInput) return ''
-  
+
   try {
     const date = typeof dateInput === 'string' ? new Date(dateInput) : dateInput
     if (isNaN(date.getTime())) return ''
-    
+
     const year = date.getFullYear()
     const month = String(date.getMonth() + 1).padStart(2, '0')
     const day = String(date.getDate()).padStart(2, '0')
-    
+
     return `${year}/${month}/${day}`
   } catch (error) {
     console.error('日期格式化錯誤:', error)
@@ -35,11 +35,11 @@ export function formatDisplayDate(dateInput: string | Date | null | undefined): 
  */
 export function formatISODate(dateInput: string | Date | null | undefined): string {
   if (!dateInput) return ''
-  
+
   try {
     const date = typeof dateInput === 'string' ? new Date(dateInput) : dateInput
     if (isNaN(date.getTime())) return ''
-    
+
     return date.toISOString().split(TIME_FORMATS.ISO_DATE_SPLIT)[0]
   } catch (error) {
     console.error('ISO 日期格式化錯誤:', error)
@@ -86,15 +86,15 @@ export function getHourFromTimeSlot(timeSlot: string): number {
 export function filterAvailableSlots(slots: string[], selectedDate: Date | string): string[] {
   const date = typeof selectedDate === 'string' ? new Date(selectedDate) : selectedDate
   const today = new Date()
-  
+
   // 如果不是今天，返回所有時段
   if (!isSameDay(date, today)) {
     return slots
   }
-  
+
   // 如果是今天，過濾掉已過去的時段
   const currentHour = today.getHours()
-  return slots.filter(slot => getHourFromTimeSlot(slot) > currentHour)
+  return slots.filter((slot) => getHourFromTimeSlot(slot) > currentHour)
 }
 
 /**
@@ -105,4 +105,4 @@ export function filterAvailableSlots(slots: string[], selectedDate: Date | strin
 export function isValidDateString(dateString: string): boolean {
   const date = new Date(dateString)
   return !isNaN(date.getTime())
-} 
+}

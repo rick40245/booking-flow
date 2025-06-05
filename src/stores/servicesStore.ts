@@ -52,7 +52,7 @@ export const useServiceStore = defineStore('service', {
         price: 1000,
         workTime: '9:00-18:00',
         availableSlots: ['9:00', '10:00', '11:00', '14:00', '15:00', '16:00', '17:00'],
-        unavailableSlots: ['12:00', '13:00'] // 午休時間
+        unavailableSlots: ['12:00', '13:00'], // 午休時間
       },
       {
         id: 2,
@@ -60,7 +60,7 @@ export const useServiceStore = defineStore('service', {
         price: 1200,
         workTime: '10:00-19:00',
         availableSlots: ['10:00', '11:00', '14:00', '15:00', '16:00', '17:00', '18:00'],
-        unavailableSlots: ['12:00', '13:00'] // 午休時間
+        unavailableSlots: ['12:00', '13:00'], // 午休時間
       },
       {
         id: 3,
@@ -68,7 +68,7 @@ export const useServiceStore = defineStore('service', {
         price: 1300,
         workTime: '10:00-20:00',
         availableSlots: ['10:00', '11:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00'],
-        unavailableSlots: ['12:00', '13:00'] // 午休時間
+        unavailableSlots: ['12:00', '13:00'], // 午休時間
       },
       {
         id: 4,
@@ -76,7 +76,7 @@ export const useServiceStore = defineStore('service', {
         price: 1500,
         workTime: '11:00-19:00',
         availableSlots: ['11:00', '12:00', '14:00', '15:00', '16:00', '17:00', '18:00'],
-        unavailableSlots: ['13:00'] // 午休時間
+        unavailableSlots: ['13:00'], // 午休時間
       },
       {
         id: 5,
@@ -84,34 +84,34 @@ export const useServiceStore = defineStore('service', {
         price: 1800,
         workTime: '9:00-17:00',
         availableSlots: ['9:00', '10:00', '11:00', '14:00', '15:00', '16:00'],
-        unavailableSlots: ['12:00', '13:00'] // 午休時間
-      }
+        unavailableSlots: ['12:00', '13:00'], // 午休時間
+      },
     ] as Staff[],
-    
+
     /**
      * 服務項目列表
      * TODO: 未來應從 API 取得
      */
     services: [
-      { 
-        id: 1, 
-        name: '臉部護理', 
+      {
+        id: 1,
+        name: '臉部護理',
         serviceType: 'facial',
-        staffIds: [1, 2] // 張美容師、陳美容師
+        staffIds: [1, 2], // 張美容師、陳美容師
       },
-      { 
-        id: 2, 
-        name: '按摩', 
+      {
+        id: 2,
+        name: '按摩',
         serviceType: 'massage',
-        staffIds: [3] // 李按摩師
+        staffIds: [3], // 李按摩師
       },
-      { 
-        id: 3, 
-        name: '造型設計', 
+      {
+        id: 3,
+        name: '造型設計',
         serviceType: 'styling',
-        staffIds: [4, 5] // 王造型師、林造型師
-      }
-    ] as Service[]
+        staffIds: [4, 5], // 王造型師、林造型師
+      },
+    ] as Service[],
   }),
 
   getters: {
@@ -119,22 +119,22 @@ export const useServiceStore = defineStore('service', {
      * 取得所有服務類型
      */
     serviceTypes(state): string[] {
-      return [...new Set(state.services.map(s => s.serviceType))]
+      return [...new Set(state.services.map((s) => s.serviceType))]
     },
-    
+
     /**
      * 取得所有服務人員數量
      */
     totalStaffCount(state): number {
       return state.staffMembers.length
     },
-    
+
     /**
      * 取得所有服務項目數量
      */
     totalServiceCount(state): number {
       return state.services.length
-    }
+    },
   },
 
   actions: {
@@ -153,7 +153,7 @@ export const useServiceStore = defineStore('service', {
      * @returns 服務項目或 undefined
      */
     getServiceById(id: number): Service | undefined {
-      return this.services.find(service => service.id === id)
+      return this.services.find((service) => service.id === id)
     },
 
     /**
@@ -162,7 +162,7 @@ export const useServiceStore = defineStore('service', {
      * @returns 服務人員或 undefined
      */
     getStaffById(id: number): Staff | undefined {
-      return this.staffMembers.find(staff => staff.id === id)
+      return this.staffMembers.find((staff) => staff.id === id)
     },
 
     /**
@@ -171,22 +171,24 @@ export const useServiceStore = defineStore('service', {
      * @returns 服務人員擴展資訊陣列
      */
     getStaffByServiceType(serviceType: string): (StaffDisplayInfo | null)[] {
-      const service = this.services.find(s => s.serviceType === serviceType)
+      const service = this.services.find((s) => s.serviceType === serviceType)
       if (!service) return []
-      
-      return service.staffIds.map(staffId => {
-        const staff = this.getStaffById(staffId)
-        if (!staff) return null
-        
-        return {
-          serviceId: service.id,
-          staffId: staff.id,
-          staffName: staff.name,
-          workTime: staff.workTime,
-          price: staff.price,
-          availableSlots: staff.availableSlots
-        }
-      }).filter(Boolean)
+
+      return service.staffIds
+        .map((staffId) => {
+          const staff = this.getStaffById(staffId)
+          if (!staff) return null
+
+          return {
+            serviceId: service.id,
+            staffId: staff.id,
+            staffName: staff.name,
+            workTime: staff.workTime,
+            price: staff.price,
+            availableSlots: staff.availableSlots,
+          }
+        })
+        .filter(Boolean)
     },
 
     /**
@@ -207,9 +209,9 @@ export const useServiceStore = defineStore('service', {
     getStaffByServiceId(serviceId: number): Staff[] {
       const service = this.getServiceById(serviceId)
       if (!service) return []
-      
+
       return service.staffIds
-        .map(staffId => this.getStaffById(staffId))
+        .map((staffId) => this.getStaffById(staffId))
         .filter((staff): staff is Staff => staff !== undefined)
     },
 
@@ -224,7 +226,7 @@ export const useServiceStore = defineStore('service', {
       if (!staff) return []
 
       const slots = staff.availableSlots || []
-      
+
       // 如果有指定日期，過濾已過去的時段
       if (date) {
         return filterAvailableSlots(slots, date)
@@ -232,7 +234,7 @@ export const useServiceStore = defineStore('service', {
 
       return slots
     },
-    
+
     /**
      * 檢查特定時段是否可用
      * @param staffId - 服務人員 ID
@@ -244,7 +246,7 @@ export const useServiceStore = defineStore('service', {
       const availableSlots = this.getAvailableSlots(staffId, date)
       return availableSlots.includes(slot)
     },
-    
+
     /**
      * 取得服務的價格範圍
      * @param serviceId - 服務 ID
@@ -253,12 +255,12 @@ export const useServiceStore = defineStore('service', {
     getServicePriceRange(serviceId: number): { min: number; max: number } | null {
       const staffList = this.getStaffByServiceId(serviceId)
       if (staffList.length === 0) return null
-      
-      const prices = staffList.map(staff => staff.price)
+
+      const prices = staffList.map((staff) => staff.price)
       return {
         min: Math.min(...prices),
-        max: Math.max(...prices)
+        max: Math.max(...prices),
       }
-    }
-  }
-}) 
+    },
+  },
+})

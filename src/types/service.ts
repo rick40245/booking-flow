@@ -57,7 +57,7 @@ export interface Service {
 export enum ServiceType {
   FACIAL = 'facial',
   MASSAGE = 'massage',
-  STYLING = 'styling'
+  STYLING = 'styling',
 }
 
 /**
@@ -262,4 +262,4 @@ export interface ServiceReview {
   createdAt: string
   /** 是否已驗證 */
   isVerified: boolean
-} 
+}

@@ -52,7 +52,7 @@ export function hasContactInfo(phone: string, email: string): boolean {
 export function validateTaiwanPhone(
   _rule: unknown,
   value: string,
-  callback: ValidationCallback
+  callback: ValidationCallback,
 ): void {
   if (value && !isValidTaiwanPhone(value)) {
     callback(new Error(MESSAGES.ERRORS.INVALID_PHONE))
@@ -70,7 +70,7 @@ export function validateTaiwanPhone(
 export function validateEmailFormat(
   _rule: unknown,
   value: string,
-  callback: ValidationCallback
+  callback: ValidationCallback,
 ): void {
   if (value && !isValidEmail(value)) {
     callback(new Error(MESSAGES.ERRORS.INVALID_EMAIL))
@@ -84,9 +84,7 @@ export function validateEmailFormat(
  * @param extraPersonForm - 額外預約人表單資料
  * @returns 驗證函數
  */
-export function createPhoneOrEmailValidator(
-  extraPersonForm: { phone: string; email: string }
-) {
+export function createPhoneOrEmailValidator(extraPersonForm: { phone: string; email: string }) {
   return (_rule: unknown, _value: string, callback: ValidationCallback): void => {
     if (!hasContactInfo(extraPersonForm.phone, extraPersonForm.email)) {
       callback(new Error(MESSAGES.INFO.PHONE_EMAIL_REQUIRED))
@@ -104,7 +102,7 @@ export function createPhoneOrEmailValidator(
  */
 export function createRequiredRule(
   message: string = MESSAGES.ERRORS.REQUIRED_FIELD,
-  trigger: 'blur' | 'change' = 'blur'
+  trigger: 'blur' | 'change' = 'blur',
 ) {
   return { required: true, message, trigger }
 }
@@ -119,7 +117,7 @@ export function createRequiredRule(
 export function createMaxLengthRule(
   max: number,
   message: string,
-  trigger: 'blur' | 'change' = 'blur'
+  trigger: 'blur' | 'change' = 'blur',
 ) {
   return { max, message, trigger }
 }
@@ -134,7 +132,7 @@ export function createMaxLengthRule(
 export function createPatternRule(
   pattern: RegExp,
   message: string,
-  trigger: 'blur' | 'change' = 'blur'
+  trigger: 'blur' | 'change' = 'blur',
 ) {
   return { pattern, message, trigger }
-} 
+}
