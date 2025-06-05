@@ -1,6 +1,6 @@
 <template>
-    <PageContainer title="頁面1 - 服務項目列表頁" max-width="sm">
-        <div class="service-list">
+    <PageContainer title="頁面1 - 服務項目列表頁" max-width="lg">
+        <div class="w-full flex flex-col gap-4 md:flex-row md:flex-wrap md:gap-6 md:justify-center">
             <ServiceCard v-for="serviceType in serviceTypes" :key="serviceType.type" :service="serviceType"
                 :isSelected="selectedServiceType === serviceType.type" @select="handleSelect" />
         </div>
@@ -79,22 +79,3 @@ function handleLeave() {
 
 console.log('serviceTypes:', serviceTypes.value)
 </script>
-
-<style scoped>
-.service-list {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
-
-/* 移動端優化 */
-@media (min-width: 768px) {
-    .service-list {
-        flex-direction: row;
-        flex-wrap: wrap;
-        gap: 24px;
-        justify-content: center;
-    }
-}
-</style>

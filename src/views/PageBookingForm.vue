@@ -1,9 +1,9 @@
 <template>
     <PageContainer :title="pageTitle" max-width="lg">
         <!-- 已選擇服務項目卡片 -->
-        <div class="selected-service-card">
-            <p class="service-name">已選擇: {{ selectedServiceName }}</p>
-            <p class="service-price">
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-5">
+            <p class="font-semibold text-sm mb-1 text-gray-800">已選擇: {{ selectedServiceName }}</p>
+            <p class="text-sm text-gray-800 m-0">
                 價格:
                 <span v-if="typeof selectedServicePrice === 'string'">
                     ${{ selectedServicePrice }}
@@ -15,18 +15,18 @@
         </div>
 
         <!-- 預約資訊表單 -->
-        <div class="form-section">
-            <div class="section-title">預約資訊</div>
+        <div class="bg-white rounded-lg p-4 mb-4 shadow-sm">
+            <div class="font-semibold text-sm mb-4 text-gray-800">預約資訊</div>
 
             <el-form :model="bookingForm" :rules="formRules" ref="formRef" label-position="top">
                 <!-- 預約人數 -->
                 <el-form-item label="預約總人數" prop="totalPeople">
-                    <el-input-number v-model="bookingForm.totalPeople" :min="1" :max="5" size="default"
+                    <el-input-number v-model="bookingForm.totalPeople" :min="BOOKING_LIMITS.MIN_PEOPLE" :max="BOOKING_LIMITS.MAX_PEOPLE" size="default"
                         style="width: 100%;" />
                 </el-form-item>
 
                 <!-- 主要預約人資訊標題 -->
-                <div class="section-subtitle">主要預約人資訊</div>
+                <div class="text-sm font-semibold text-gray-800 my-5">主要預約人資訊</div>
 
                 <!-- 姓名 -->
                 <el-form-item label="姓名" prop="name">
@@ -46,19 +46,28 @@
                 </el-form-item>
 
                 <!-- 選擇服務人員 -->
-                <div class="staff-selection-section">
-                    <div class="staff-selection-label">選擇服務人員 <span class="required-mark">*</span></div>
-                    <div v-if="availableStaff.length > 0" class="staff-cards-grid">
-                        <div v-for="staff in availableStaff" :key="staff?.serviceId || staff?.staffId" :class="[
-                            'staff-card',
-                            bookingForm.selectedStaffId === staff?.staffId ? 'selected' : ''
-                        ]" @click="staff && selectStaff(staff)">
-                            <div class="staff-name">{{ staff?.staffName }}</div>
-                            <div class="staff-work-time">{{ staff?.workTime }}</div>
-                            <div class="staff-price">${{ staff?.price }}</div>
+                <div class="mb-4">
+                    <div class="text-xs text-gray-600 mb-2">選擇服務人員 <span class="text-red-500 ml-1">*</span></div>
+                    <div v-if="availableStaff.length > 0" class="flex gap-2 overflow-x-auto pb-1">
+                        <div v-for="staff in availableStaff" :key="staff?.serviceId || staff?.staffId" 
+                            :class="[
+                                'flex-none w-1/3 min-w-1/3 rounded-lg p-3 cursor-pointer transition-all',
+                                bookingForm.selectedStaffId === staff?.staffId 
+                                    ? 'bg-blue-50 shadow-md' 
+                                    : 'bg-white hover:bg-blue-25'
+                            ]"
+                            :style="{
+                                border: bookingForm.selectedStaffId === staff?.staffId 
+                                    ? '1px solid #3b82f6' 
+                                    : '1px solid #d1d5db'
+                            }"
+                            @click="staff && selectStaff(staff)">
+                            <div class="font-semibold text-sm text-gray-800 mb-1">{{ staff?.staffName }}</div>
+                            <div class="text-xs text-gray-600 mb-1">{{ staff?.workTime }}</div>
+                            <div class="text-xs text-orange-600 font-semibold">${{ staff?.price }}</div>
                         </div>
                     </div>
-                    <div v-else class="no-staff-message">
+                    <div v-else class="text-center text-gray-500 text-xs p-5 bg-gray-50 rounded border border-dashed border-gray-300">
                         無可用服務人員
                     </div>
                 </div>
@@ -70,26 +79,35 @@
                 </el-form-item>
 
                 <!-- 可預約時段 -->
-                <div class="time-slots-section">
-                    <div class="time-slots-label">
-                        選擇服務時段 <span class="required-mark">*</span>
+                <div class="mb-4">
+                    <div class="text-xs text-gray-600 mb-2">
+                        選擇服務時段 <span class="text-red-500 ml-1">*</span>
                         <span v-if="!bookingForm.date" class="text-gray-400">(請先選擇日期)</span>
                         <span v-else-if="!bookingForm.selectedStaffId" class="text-orange-500">(請先選擇服務人員)</span>
                         <span v-else-if="availableSlots.length === 0" class="text-red-500">(當日無可用時段)</span>
                     </div>
                     <div v-if="bookingForm.date && bookingForm.selectedStaffId && availableSlots.length > 0"
-                        class="time-slots-grid">
-                        <button v-for="slot in availableSlots" :key="slot" type="button" :class="[
-                            'time-slot-btn',
-                            bookingForm.timeSlot === slot ? 'selected' : ''
-                        ]" @click="selectTimeSlot(slot)">
+                        class="grid grid-cols-3 gap-2">
+                        <button v-for="slot in availableSlots" :key="slot" type="button" 
+                            :class="[
+                                'rounded p-2 text-xs cursor-pointer transition-all text-center',
+                                bookingForm.timeSlot === slot 
+                                    ? 'bg-blue-50 text-gray-800 shadow-md' 
+                                    : 'bg-white hover:bg-blue-25'
+                            ]"
+                            :style="{
+                                border: bookingForm.timeSlot === slot 
+                                    ? '1px solid #3b82f6' 
+                                    : '1px solid #d1d5db'
+                            }"
+                            @click="selectTimeSlot(slot)">
                             {{ slot }}
                         </button>
                     </div>
-                    <div v-else-if="!bookingForm.date" class="time-slots-placeholder">
+                    <div v-else-if="!bookingForm.date" class="text-center text-gray-500 text-xs p-5 bg-gray-50 rounded border border-dashed border-gray-300">
                         請先選擇預約日期以查看可用時段
                     </div>
-                    <div v-else-if="!bookingForm.selectedStaffId" class="time-slots-placeholder">
+                    <div v-else-if="!bookingForm.selectedStaffId" class="text-center text-gray-500 text-xs p-5 bg-gray-50 rounded border border-dashed border-gray-300">
                         請先選擇服務人員以查看可用時段
                     </div>
                 </div>
@@ -98,20 +116,20 @@
         </div>
 
         <!-- 額外預約人資訊 -->
-        <div v-if="bookingForm.totalPeople > 1" class="form-section extra-person-section">
-            <div class="section-title">
+        <div v-if="bookingForm.totalPeople > 1" class="bg-white rounded-lg p-4 mb-5">
+            <div class="font-semibold text-sm mb-4 text-gray-800">
                 額外預約人資訊
-                <span class="person-count-info">
+                <span class="text-xs text-gray-600 font-normal">
                     ({{ extraPersons.length }}/{{ bookingForm.totalPeople - 1 }})
                 </span>
             </div>
 
-            <div class="add-person-container">
+            <div class="mb-3">
                 <el-button type="primary" size="default" @click="openExtraPersonDialog" :disabled="isAddPersonDisabled"
-                    class="add-person-btn">
+                    class="w-full bg-blue-500 border-blue-500 flex items-center justify-center gap-1.5">
                     新增預約人
                 </el-button>
-                <div v-if="isAddPersonDisabled" class="add-person-hint">
+                <div v-if="isAddPersonDisabled" class="mt-2 text-center">
                     <el-text type="info" size="small">
                         已達預約人數上限 ({{ bookingForm.totalPeople }}人)
                     </el-text>
@@ -119,33 +137,31 @@
             </div>
 
             <!-- 額外預約人列表 -->
-            <div v-if="extraPersons.length > 0" class="extra-persons-list">
-                <div v-for="(person, index) in extraPersons" :key="index" class="extra-person-item">
-                    <div class="person-info">
-                        <div class="person-field">
-                            <div class="person-value">
-                                <div class="person-value">姓名: {{ person.name }}</div>
-                                <div v-if="person.phone">電話: {{ person.phone }}</div>
-                                <div v-if="person.email">Email: {{ person.email }}</div>
-                                <span v-if="!person.phone && !person.email" class="no-contact">未提供</span>
-                            </div>
+            <div v-if="extraPersons.length > 0" class="mb-3">
+                <div v-for="(person, index) in extraPersons" :key="index" class="bg-gray-50 rounded p-3 mb-2 flex justify-between items-start">
+                    <div class="flex-1">
+                        <div class="mb-1.5">
+                            <div class="text-xs text-gray-800">姓名: {{ person.name }}</div>
+                            <div v-if="person.phone" class="text-xs text-gray-800">電話: {{ person.phone }}</div>
+                            <div v-if="person.email" class="text-xs text-gray-800">Email: {{ person.email }}</div>
+                            <span v-if="!person.phone && !person.email" class="text-gray-500 italic">未提供</span>
                         </div>
                     </div>
-                    <el-button type="danger" size="small" @click="removeExtraPerson(index)" class="remove-btn">
+                    <el-button type="danger" size="small" @click="removeExtraPerson(index)" class="ml-2 min-w-15">
                         移除
                     </el-button>
                 </div>
             </div>
 
             <!-- 空狀態提示 -->
-            <div v-else class="empty-extra-persons">
+            <div v-else class="text-center text-gray-500 text-xs p-5 bg-gray-50 rounded border border-dashed border-gray-300">
                 <el-text type="info">請點選上方按鈕新增額外預約人資訊</el-text>
             </div>
         </div>
 
         <!-- 提交按鈕區域 -->
-        <div class="submit-container">
-            <el-button type="primary" size="large" @click="submitForm" class="submit-btn">
+        <div class="sticky bottom-0 p-4 bg-white border-t border-gray-200">
+            <el-button type="primary" size="large" @click="submitForm" class="w-full p-3 bg-blue-500 border-blue-500 text-base font-semibold">
                 確認預約
             </el-button>
         </div>
@@ -164,7 +180,7 @@
                 <el-form-item label="Email" prop="email">
                     <el-input v-model="extraPersonForm.email" type="email" placeholder="example@email.com" />
                 </el-form-item>
-                <div class="contact-info-hint">
+                <div class="mt-2 mb-4 pl-1">
                     <el-text type="info" size="small">* 電話與Email請至少填寫一項</el-text>
                 </div>
             </el-form>
@@ -182,13 +198,46 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, nextTick } from 'vue'
-import { useRouter, onBeforeRouteLeave } from 'vue-router'
+import { useRouter, onBeforeRouteLeave, type NavigationGuardNext, type RouteLocationNormalized } from 'vue-router'
 import { useServiceStore } from '@/stores/servicesStore'
 import { useBookingStore, type BookingData } from '@/stores/bookingStore'
 import ConfirmDialog from '@/components/ConfirmDialog.vue'
 import PageContainer from '@/components/PageContainer.vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import { ElMessage } from 'element-plus'
+import { 
+    VALIDATION_RULES, 
+    MESSAGES, 
+    ROUTE_NAMES,
+    BOOKING_LIMITS 
+} from '@/constants/booking'
+import { 
+    createRequiredRule, 
+    createMaxLengthRule, 
+    createPhoneOrEmailValidator,
+    validateTaiwanPhone,
+    validateEmailFormat 
+} from '@/utils/validation'
+import { isDateBeforeToday } from '@/utils/date'
+
+// Define types for route navigation
+interface RouteNavigationContext {
+  to: RouteLocationNormalized
+  from: RouteLocationNormalized
+  next: NavigationGuardNext
+}
+
+// Define type for staff object
+interface StaffMember {
+  staffId: number
+  staffName: string
+  serviceId: number
+  workTime: string
+  price: number
+}
+
+// Define validation callback type for Element Plus
+type ValidationCallback = (error?: Error) => void
 
 const router = useRouter()
 const serviceStore = useServiceStore()
@@ -200,7 +249,9 @@ const extraPersonDialogVisible = ref(false)
 const isSubmittingExtraPerson = ref(false)
 const showConfirm = ref(false)
 const isFormSubmitted = ref(false)
-let nextRoute: any = null
+
+// Enhanced navigation context handling with proper typing
+let pendingNavigationContext: RouteNavigationContext | null = null
 
 // 額外預約人表單
 const extraPersonForm = ref({
@@ -282,13 +333,6 @@ const selectedServicePrice = computed(() => {
     }
 })
 
-// 已選擇的服務（根據服務人員）
-const selectedService = computed(() => {
-    if (!bookingForm.value.selectedStaffId) return null
-    const staff = serviceStore.getStaffById(bookingForm.value.selectedStaffId)
-    return staff
-})
-
 // 可用時段 - 根據選中的服務人員和日期動態生成
 const availableSlots = computed(() => {
     if (!bookingForm.value.selectedStaffId) return []
@@ -302,40 +346,38 @@ const availableSlots = computed(() => {
 // 表單驗證規則
 const formRules: FormRules = {
     totalPeople: [
-        { required: true, message: '請選擇預約人數', trigger: 'change' }
+        createRequiredRule('請選擇預約人數', 'change')
     ],
     name: [
-        { required: true, message: '請輸入姓名', trigger: 'blur' },
-        { max: 20, message: '姓名最多20個字', trigger: 'blur' }
+        createRequiredRule('請輸入姓名', 'blur'),
+        createMaxLengthRule(VALIDATION_RULES.NAME_MAX_LENGTH, `姓名最多${VALIDATION_RULES.NAME_MAX_LENGTH}個字`, 'blur')
     ],
     phone: [
-        { required: true, message: '請輸入電話', trigger: 'blur' },
-        { pattern: /^09\d{8}$/, message: '請輸入正確的台灣手機號碼格式', trigger: 'blur' }
+        createRequiredRule('請輸入電話', 'blur'),
+        { pattern: VALIDATION_RULES.PHONE_PATTERN, message: MESSAGES.ERRORS.INVALID_PHONE, trigger: 'blur' }
     ],
     date: [
-        { required: true, message: '請選擇預約日期', trigger: 'change' }
+        createRequiredRule('請選擇預約日期', 'change')
     ]
 }
 
 // 禁用今日之前的日期
-function disabledDate(date: Date) {
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
-    return date < today
+function disabledDate(date: Date): boolean {
+    return isDateBeforeToday(date)
 }
 
 // 選擇服務人員
-function selectStaff(staff: any) {
+function selectStaff(staff: StaffMember): void {
     bookingStore.setSelectedStaff(staff.staffId)
 }
 
 // 選擇時段 - 直接修改 store 的 formData
-function selectTimeSlot(slot: string) {
+function selectTimeSlot(slot: string): void {
     bookingStore.formData.timeSlot = slot
 }
 
 // 開啟額外預約人Dialog
-function openExtraPersonDialog() {
+function openExtraPersonDialog(): void {
     console.log('openExtraPersonDialog called')
     console.log('isAddPersonDisabled:', isAddPersonDisabled.value)
     console.log('extraPersons.length:', extraPersons.value.length)
@@ -349,12 +391,12 @@ function openExtraPersonDialog() {
 }
 
 // 新增額外預約人
-function addExtraPerson(person: { name: string, phone: string, email: string }) {
+function addExtraPerson(person: { name: string, phone: string, email: string }): void {
     bookingStore.formData.extraPersons.push(person)
 }
 
 // 處理確認新增額外預約人
-function handleConfirmExtraPerson() {
+function handleConfirmExtraPerson(): void {
     console.log('handleConfirmExtraPerson called')
     isSubmittingExtraPerson.value = true
 
@@ -383,14 +425,14 @@ function handleConfirmExtraPerson() {
 }
 
 // 處理取消新增額外預約人
-function handleCancelExtraPerson() {
+function handleCancelExtraPerson(): void {
     console.log('handleCancelExtraPerson called')
     extraPersonDialogVisible.value = false
     resetExtraPersonForm()
 }
 
 // 重置額外預約人表單
-function resetExtraPersonForm() {
+function resetExtraPersonForm(): void {
     extraPersonForm.value = { name: '', phone: '', email: '' }
     // 使用 nextTick 確保在下一個 tick 清除驗證
     nextTick(() => {
@@ -399,12 +441,12 @@ function resetExtraPersonForm() {
 }
 
 // 移除額外預約人
-function removeExtraPerson(index: number) {
+function removeExtraPerson(index: number): void {
     bookingStore.formData.extraPersons.splice(index, 1)
 }
 
 // 提交表單
-function submitForm() {
+function submitForm(): void {
     console.log('=== 開始提交表單 ===')
     console.log('bookingForm.value:', bookingForm.value)
     console.log('extraPersons.value:', extraPersons.value)
@@ -471,7 +513,7 @@ function submitForm() {
 
             // 跳轉到頁面3
             console.log('🚀 準備跳轉到 booking-summary')
-            router.push({ name: 'booking-summary' }).then(() => {
+            router.push({ name: ROUTE_NAMES.BOOKING_SUMMARY }).then(() => {
                 console.log('✅ 成功跳轉到 booking-summary')
                 // 成功跳轉後，可以考慮清除 Page 2 的 formData，除非你的編輯流程需要它
                 // bookingStore.clearFormData() 
@@ -485,43 +527,82 @@ function submitForm() {
     })
 }
 
-// 處理離開頁面
-function handleLeave() {
-    bookingStore.clear()
-    showConfirm.value = false
+// Handle leaving the page with proper data cleanup and error handling
+function handleLeave(): void {
+    try {
+        // Clear all booking data as specified in requirements
+        bookingStore.clear()
+        bookingStore.clearFormData()
+        bookingStore.clearEditingItemIndex()
+        
+        // Close the dialog
+        showConfirm.value = false
 
-    if (nextRoute) {
-        nextRoute() // 繼續之前被阻止的導航
-        nextRoute = null
-    } else {
-        router.push({ name: 'service-list' })
+        // Always navigate back to page 1 (service list) when confirming to leave
+        router.push({ name: 'service-list' }).then(() => {
+            console.log('✅ Successfully navigated back to service list page')
+        }).catch((error) => {
+            console.error('❌ Failed to navigate back to service list:', error)
+            // Fallback: try to navigate to home or show error message
+            ElMessage.error('導航失敗，請重新整理頁面')
+            // Force page reload as last resort
+            window.location.href = '/'
+        })
+
+        // Clear any pending navigation context since we're handling navigation manually
+        pendingNavigationContext = null
+    } catch (error) {
+        console.error('❌ Error occurred while leaving page:', error)
+        ElMessage.error('操作失敗，請重試')
+        
+        // Ensure dialog is closed even if error occurs
+        showConfirm.value = false
+        pendingNavigationContext = null
     }
 }
 
-// 路由守衛 - 檢查是否有表單資料，但如果表單已成功提交則允許導航
+// Enhanced route guard with error handling and improved typing
 onBeforeRouteLeave((to, from, next) => {
-    // 如果表單已成功提交，允許導航到 booking-summary
-    if (isFormSubmitted.value && to.name === 'booking-summary') {
-        console.log('✅ 表單已提交，允許導航到 booking-summary')
-        next()
-        return
-    }
+    try {
+        // If form was successfully submitted, allow navigation to booking-summary
+        if (isFormSubmitted.value && to.name === 'booking-summary') {
+            console.log('✅ Form submitted, allowing navigation to booking-summary')
+            next()
+            return
+        }
 
-    // 其他情況下檢查是否有表單資料
-    if (bookingStore.hasFormData) {
-        showConfirm.value = true
-        nextRoute = next
-        next(false) // 阻止導航
-    } else {
-        next() // 允許導航
+        // Check if user has form data that would be lost
+        if (bookingStore.hasFormData) {
+            console.log('⚠️ User has unsaved form data, showing confirmation dialog')
+            showConfirm.value = true
+            pendingNavigationContext = { to, from, next }
+            next(false) // Block navigation
+        } else {
+            console.log('✅ No form data, allowing navigation')
+            next() // Allow navigation
+        }
+    } catch (error) {
+        console.error('❌ Error in route guard:', error)
+        // In case of error, allow navigation to prevent user from being stuck
+        ElMessage.error('路由檢查失敗，允許導航')
+        next()
     }
 })
 
-// 處理 confirm dialog 的響應
+// Enhanced dialog state watcher with error handling
 watch(showConfirm, (val) => {
-    if (!val && nextRoute) {
-        nextRoute(false) // 取消導航
-        nextRoute = null
+    try {
+        // When dialog is closed via cancel, prevent navigation
+        if (!val && pendingNavigationContext) {
+            const { next } = pendingNavigationContext
+            console.log('🚫 Dialog cancelled, blocking navigation')
+            next(false) // Cancel navigation
+            pendingNavigationContext = null
+        }
+    } catch (error) {
+        console.error('❌ Error handling dialog close:', error)
+        // Clear state to prevent issues
+        pendingNavigationContext = null
     }
 })
 
@@ -611,41 +692,27 @@ onMounted(() => {
 })
 
 // 電話或Email必填驗證器
-function phoneOrEmailRequired(_: any, __: string, callback: (error?: Error) => void) {
-    const hasPhone = extraPersonForm.value.phone.trim() !== ''
-    const hasEmail = extraPersonForm.value.email.trim() !== ''
-
-    if (!hasPhone && !hasEmail) {
-        callback(new Error('電話或Email必須至少填寫一項'))
-    } else {
-        callback()
-    }
+function phoneOrEmailRequired(_: unknown, __: string, callback: ValidationCallback): void {
+    const phoneOrEmailValidator = createPhoneOrEmailValidator(extraPersonForm.value)
+    phoneOrEmailValidator(_, __, callback)
 }
 
 // 台灣手機號碼驗證器
-function validatePhone(_: any, value: string, callback: (error?: Error) => void) {
-    if (value && !/^09\d{8}$/.test(value)) {
-        callback(new Error('請輸入正確的台灣手機號碼格式'))
-    } else {
-        callback()
-    }
+function validatePhone(_: unknown, value: string, callback: ValidationCallback): void {
+    validateTaiwanPhone(_, value, callback)
 }
 
 // Email格式驗證器
-function validateEmail(_: any, value: string, callback: (error?: Error) => void) {
-    if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-        callback(new Error('請輸入正確的Email格式'))
-    } else {
-        callback()
-    }
+function validateEmail(_: unknown, value: string, callback: ValidationCallback): void {
+    validateEmailFormat(_, value, callback)
 }
 
 // 額外預約人表單驗證規則
 const extraPersonRules: FormRules = {
     name: [
-        { required: true, message: '請輸入姓名', trigger: 'blur' },
+        createRequiredRule('請輸入姓名', 'blur'),
         { min: 1, message: '姓名不能為空', trigger: 'blur' },
-        { max: 20, message: '姓名最多20個字', trigger: 'blur' }
+        createMaxLengthRule(VALIDATION_RULES.NAME_MAX_LENGTH, `姓名最多${VALIDATION_RULES.NAME_MAX_LENGTH}個字`, 'blur')
     ],
     phone: [
         { validator: phoneOrEmailRequired, trigger: 'blur' },
@@ -657,336 +724,3 @@ const extraPersonRules: FormRules = {
     ]
 }
 </script>
-
-<style scoped>
-.selected-service-card {
-    background: #e8f4fd;
-    border: 1px solid #b3d7f0;
-    border-radius: 8px;
-    padding: 12px;
-    margin-bottom: 20px;
-}
-
-.service-name {
-    font-weight: 600;
-    font-size: 14px;
-    margin: 0 0 4px 0;
-    color: #333;
-}
-
-.service-price {
-    font-size: 14px;
-    margin: 0;
-    color: #333;
-}
-
-.form-section {
-    background: #fff;
-    border-radius: 8px;
-    padding: 16px;
-    margin-bottom: 16px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.section-title {
-    font-weight: 600;
-    font-size: 14px;
-    margin-bottom: 16px;
-    color: #333;
-}
-
-/* 服務人員選擇區塊 */
-.staff-selection-section {
-    margin-bottom: 16px;
-}
-
-.staff-selection-label {
-    font-size: 13px;
-    color: #666;
-    margin-bottom: 8px;
-}
-
-.staff-cards-grid {
-    display: flex;
-    gap: 8px;
-    overflow-x: auto;
-    padding-bottom: 4px;
-    scrollbar-width: thin;
-}
-
-.staff-cards-grid::-webkit-scrollbar {
-    height: 4px;
-}
-
-.staff-cards-grid::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 2px;
-}
-
-.staff-cards-grid::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
-    border-radius: 2px;
-}
-
-.staff-cards-grid::-webkit-scrollbar-thumb:hover {
-    background: #a8a8a8;
-}
-
-.staff-card {
-    flex: 0 0 calc(33.333% - 6px);
-    min-width: calc(33.333% - 6px);
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 12px;
-    cursor: pointer;
-    transition: all 0.2s;
-    background: #fff;
-}
-
-.staff-card:hover {
-    border-color: #2196F3;
-    background: #f8fafe;
-}
-
-.staff-card.selected {
-    border-color: #2196F3;
-    background: #e3f2fd;
-    box-shadow: 0 2px 8px rgba(33, 150, 243, 0.2);
-}
-
-.staff-name {
-    font-weight: 600;
-    font-size: 14px;
-    color: #333;
-    margin-bottom: 4px;
-}
-
-.staff-work-time {
-    font-size: 12px;
-    color: #666;
-    margin-bottom: 4px;
-}
-
-.staff-price {
-    font-size: 13px;
-    color: #FF5722;
-    font-weight: 600;
-}
-
-.no-staff-message {
-    text-align: center;
-    color: #999;
-    font-size: 13px;
-    padding: 20px;
-    background: #f9f9f9;
-    border-radius: 6px;
-    border: 1px dashed #ddd;
-}
-
-.time-slots-section {
-    margin-bottom: 16px;
-}
-
-.time-slots-label {
-    font-size: 13px;
-    color: #666;
-    margin-bottom: 8px;
-}
-
-.time-slots-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-}
-
-.time-slots-placeholder {
-    text-align: center;
-    color: #999;
-    font-size: 13px;
-    padding: 20px;
-    background: #f9f9f9;
-    border-radius: 6px;
-    border: 1px dashed #ddd;
-}
-
-.time-slot-btn {
-    border: 1px solid #ddd;
-    background: #fff;
-    border-radius: 6px;
-    padding: 8px 4px;
-    font-size: 12px;
-    cursor: pointer;
-    transition: all 0.2s;
-    text-align: center;
-}
-
-.time-slot-btn:hover {
-    border-color: #4CAF50;
-}
-
-.time-slot-btn.selected {
-    background: #e3f2fd;
-    color: #333;
-    border-color: #2196F3;
-    box-shadow: 0 2px 8px rgba(33, 150, 243, 0.2);
-}
-
-.extra-person-section {
-    margin-bottom: 20px;
-}
-
-.add-person-container {
-    margin-bottom: 12px;
-}
-
-.add-person-btn {
-    width: 100%;
-    background: #2196F3;
-    border-color: #2196F3;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-}
-
-.add-person-hint {
-    margin-top: 8px;
-    text-align: center;
-}
-
-.extra-persons-list {
-    margin-bottom: 12px;
-}
-
-.extra-person-item {
-    background: #f8f9fa;
-    border-radius: 6px;
-    padding: 12px;
-    margin-bottom: 8px;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-}
-
-.person-info {
-    flex: 1;
-}
-
-.person-field {
-    margin-bottom: 6px;
-}
-
-.person-field label {
-    font-size: 12px;
-    color: #666;
-    display: block;
-    margin-bottom: 2px;
-}
-
-.person-value {
-    font-size: 13px;
-    color: #333;
-}
-
-.remove-btn {
-    margin-left: 8px;
-    min-width: 60px;
-}
-
-.submit-container {
-    position: sticky;
-    bottom: 0;
-    padding: 16px;
-    background: #fff;
-    border-top: 1px solid #eee;
-}
-
-.submit-btn {
-    width: 100%;
-    padding: 12px;
-    background: #2196F3;
-    border-color: #2196F3;
-    font-size: 16px;
-    font-weight: 600;
-}
-
-/* Element Plus 表單樣式覆寫 */
-:deep(.el-form-item__label) {
-    font-size: 13px;
-    color: #333;
-    font-weight: 500;
-}
-
-:deep(.el-input__inner) {
-    font-size: 14px;
-}
-
-:deep(.el-input-number) {
-    width: 100%;
-}
-
-/* 調整表單項目間距 */
-:deep(.el-form-item) {
-    margin-bottom: 16px;
-}
-
-/* 必填標記樣式 */
-.required-mark {
-    color: #f56c6c;
-    margin-left: 4px;
-}
-
-/* 將必填星號移到右邊 */
-:deep(.el-form-item.is-required .el-form-item__label::before) {
-    content: '' !important;
-    margin-right: 0 !important;
-}
-
-:deep(.el-form-item.is-required .el-form-item__label::after) {
-    content: '*';
-    color: #f56c6c;
-    margin-left: 4px;
-}
-
-/* 區段副標題樣式 */
-.section-subtitle {
-    font-size: 14px;
-    font-weight: 600;
-    color: #333;
-    margin: 20px 0 12px 0;
-}
-
-.person-count-info {
-    font-size: 12px;
-    color: #666;
-    font-weight: normal;
-}
-
-.no-contact {
-    color: #999;
-    font-style: italic;
-}
-
-.empty-extra-persons {
-    text-align: center;
-    color: #999;
-    font-size: 13px;
-    padding: 20px;
-    background: #f9f9f9;
-    border-radius: 6px;
-    border: 1px dashed #ddd;
-}
-
-.add-person-btn:disabled {
-    background: #d1d5db;
-    border-color: #d1d5db;
-    cursor: not-allowed;
-}
-
-/* 額外預約人對話框樣式 */
-.contact-info-hint {
-    margin-top: -8px;
-    margin-bottom: 16px;
-    padding-left: 4px;
-}
-</style>

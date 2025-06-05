@@ -1,63 +1,62 @@
 <template>
     <PageContainer title="頁面3 - 品項確認頁" max-width="lg">
-        <div v-if="bookingItems.length === 0" class="empty-cart">
-            <p>您的預約清單是空的。</p>
+        <div v-if="bookingItems.length === 0" class="text-center py-8 text-gray-600">
+            <p class="mb-4 text-base">您的預約清單是空的。</p>
             <el-button type="primary" @click="addNewItem" class="mt-4">開始新增預約</el-button>
         </div>
 
-        <div v-else v-for="item in bookingItems" :key="item.id" class="summary-item">
-            <div class="item-header">
-                <h2 class="item-title">預約內容與預約人資訊</h2>
+        <div v-else v-for="item in bookingItems" :key="item.id" class="w-full bg-gray-50 rounded-lg border border-gray-200 p-5 mb-5 shadow-sm">
+            <div class="mb-4 border-b border-gray-200 pb-3">
+                <h2 class="text-lg font-semibold text-gray-800">預約內容與預約人資訊</h2>
             </div>
 
             <!-- 區塊1 - 預約內容 -->
-            <div class="summary-section booking-details-section">
-                <div class="detail-grid">
-                    <div class="detail-item">
-                        <span class="detail-label">預約日期時間:</span>
-                        <span class="detail-value">{{ item.formattedDateTime }}</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">服務項目:</span>
-                        <span class="detail-value">{{ item.serviceName }}</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">服務人員:</span>
-                        <span class="detail-value">{{ item.staffName }}</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">總價格:</span>
-                        <span class="detail-value price-value">NT${{ item.price }}</span>
-                    </div>
+            <div class="mb-4 relative pb-10">
+                <div class="grid grid-cols-[auto_1fr] gap-y-2 gap-x-4 items-start">
+                    <span class="font-medium text-gray-600 text-sm">預約日期時間:</span>
+                    <span class="text-sm text-gray-800">{{ item.formattedDateTime }}</span>
+                    
+                    <span class="font-medium text-gray-600 text-sm">服務項目:</span>
+                    <span class="text-sm text-gray-800">{{ item.serviceName }}</span>
+                    
+                    <span class="font-medium text-gray-600 text-sm">服務人員:</span>
+                    <span class="text-sm text-gray-800">{{ item.staffName }}</span>
+                    
+                    <span class="font-medium text-gray-600 text-sm">總價格:</span>
+                    <span class="text-sm text-gray-800 font-bold text-orange-700">NT${{ item.price }}</span>
                 </div>
                 <el-button type="primary" size="small" @click="editItem(item.originalIndex)"
-                    class="edit-button">編輯</el-button>
+                    class="absolute bottom-2 right-2">編輯</el-button>
             </div>
 
+            <!-- 黑色分割線 -->
+            <div style="border-top: 1px solid #666666; margin: 20px 0;"></div>
+
             <!-- 區塊2 - 預約人資訊 -->
-            <div class="summary-section person-info-section">
-                <h3 class="section-subtitle">預約人資訊</h3>
-                <div class="detail-item">
-                    <span class="detail-label">主要預約人:</span>
-                    <span class="detail-value">{{ item.mainPersonDisplay }}</span>
-                </div>
-                <div v-if="item.extraPersonsDisplay && item.extraPersonsDisplay.length > 0" class="detail-item">
-                    <span class="detail-label">額外預約人:</span>
-                    <ul class="extra-persons-list">
-                        <li v-for="(personDisplay, idx) in item.extraPersonsDisplay" :key="idx"
-                            class="extra-person-value">
-                            {{ personDisplay }}
-                        </li>
-                    </ul>
+            <div class="pt-3 pb-10 relative">
+                <h3 class="text-base font-semibold mb-3 text-gray-700">預約人資訊</h3>
+                <div class="grid grid-cols-[auto_1fr] gap-y-2 gap-x-4 items-start">
+                    <span class="font-medium text-gray-600 text-sm">主要預約人:</span>
+                    <span class="text-sm text-gray-800">{{ item.mainPersonDisplay }}</span>
+                    
+                    <template v-if="item.extraPersonsDisplay && item.extraPersonsDisplay.length > 0">
+                        <span class="font-medium text-gray-600 text-sm">額外預約人:</span>
+                        <ul class="list-none pl-0 m-0">
+                            <li v-for="(personDisplay, idx) in item.extraPersonsDisplay" :key="idx"
+                                class="text-sm text-gray-800 mb-1">
+                                {{ personDisplay }}
+                            </li>
+                        </ul>
+                    </template>
                 </div>
                 <el-button type="danger" size="small" @click="removeItem(item.originalIndex)"
-                    class="remove-button-bottom">刪除</el-button>
+                    class="absolute bottom-2 right-2">刪除</el-button>
             </div>
         </div>
 
-        <div class="page-actions" v-if="bookingItems.length > 0">
-            <el-button class="action-button" type="primary" @click="addNewItem">新增預約項目</el-button>
-            <el-button class="action-button" type="primary" @click="goToCheckout">前往結帳</el-button>
+        <div class="mt-6 flex flex-row gap-3 w-full" v-if="bookingItems.length > 0">
+            <el-button class="flex-1 text-base py-3 bg-blue-500 border-blue-500 text-white hover:bg-blue-700 hover:border-blue-700" type="primary" @click="addNewItem">新增預約項目</el-button>
+            <el-button class="flex-1 text-base py-3 bg-blue-500 border-blue-500 text-white hover:bg-blue-700 hover:border-blue-700" type="primary" @click="goToCheckout">前往結帳</el-button>
         </div>
 
         <!-- 流程中斷警告 Dialog -->
@@ -94,7 +93,7 @@ const bookingItems = computed(() => {
         const formattedDate = `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`
         const formattedTime = item.timeSlot || ''
 
-        const staffName = staff?.name || (staff as any)?.staffName || '未指定'
+        const staffName = staff?.name || (staff as { staffName?: string })?.staffName || '未指定'
         const itemPrice = staff?.price !== undefined ? staff.price : 0 // 優先使用 staff.price，否則為 0
 
         return {
@@ -107,7 +106,7 @@ const bookingItems = computed(() => {
             formattedDateTime: `${formattedDate} ${formattedTime}`,
             mainPersonDisplay: `${item.name} (${item.phone})`,
             extraPersonsDisplay: item.extraPersons.map((p, i) => {
-                let contact = p.phone ? p.phone : (p.email ? p.email : '無聯絡方式')
+                const contact = p.phone ? p.phone : (p.email ? p.email : '無聯絡方式')
                 return `${i + 1}. ${p.name} (${contact})`
             })
         }
@@ -232,180 +231,3 @@ function handleCancelLeave() {
 }
 
 </script>
-<style scoped>
-.empty-cart {
-    text-align: center;
-    padding: 32px 0;
-    color: #666;
-}
-
-.empty-cart p {
-    margin-bottom: 16px;
-    font-size: 16px;
-}
-
-.summary-item {
-    width: 100%;
-    background: #f9f9f9;
-    border-radius: 8px;
-    border: 1px solid #eee;
-    padding: 20px;
-    margin-bottom: 20px;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
-}
-
-.item-header {
-    margin-bottom: 16px;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 12px;
-}
-
-.item-title {
-    font-size: 18px;
-    font-weight: 600;
-    color: #333;
-}
-
-.summary-section {
-    margin-bottom: 16px;
-    position: relative;
-}
-
-.booking-details-section {
-    padding-bottom: 40px;
-    /* 增加底部空間給編輯按鈕 */
-}
-
-.detail-grid {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 8px 12px;
-    align-items: start;
-    /* 改為 start 對齊 */
-}
-
-.detail-item {
-    display: contents;
-}
-
-.detail-label {
-    font-weight: 500;
-    color: #555;
-    font-size: 14px;
-    text-align: left;
-    /* 改為靠左對齊 */
-    padding-right: 8px;
-}
-
-.detail-value {
-    font-size: 14px;
-    color: #333;
-    word-break: break-all;
-}
-
-.price-value {
-    font-weight: bold;
-    color: #E65100;
-}
-
-.edit-button {
-    position: absolute;
-    bottom: 8px;
-    /* 放在區塊底部 */
-    right: 8px;
-    /* 放在區塊右側 */
-}
-
-.person-info-section {
-    padding-top: 12px;
-    padding-bottom: 40px;
-    /* 增加底部空間給刪除按鈕 */
-    border-top: 1px dashed #ddd;
-    margin-top: 16px;
-}
-
-.section-subtitle {
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 12px;
-    color: #444;
-}
-
-/* 預約人資訊區塊內的 detail-item 也使用 grid */
-.person-info-section .detail-item {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 8px 12px;
-    margin-bottom: 8px;
-}
-
-.person-info-section .detail-label {
-    text-align: left;
-    padding-right: 0;
-}
-
-.extra-persons-list {
-    list-style-type: none;
-    padding-left: 0;
-    margin-top: 4px;
-}
-
-.extra-person-value {
-    font-size: 14px;
-    color: #333;
-    margin-bottom: 4px;
-    padding-left: 1em;
-    text-indent: -1em;
-}
-
-.remove-button-bottom {
-    position: absolute;
-    bottom: 8px;
-    /* 放在區塊底部 */
-    right: 8px;
-    /* 放在區塊右側 */
-}
-
-.page-actions {
-    margin-top: 24px;
-    display: flex;
-    flex-direction: row;
-    /* 改為水平排列 */
-    gap: 12px;
-    width: 100%;
-}
-
-.action-button {
-    flex: 1;
-    /* 各占一半空間 */
-    font-size: 16px;
-    padding: 12px 0;
-    background: #409EFF;
-    /* Element Plus 藍色 */
-    border-color: #409EFF;
-    color: white;
-}
-
-.action-button:hover {
-    background: #337ECC;
-    /* 深一點的藍色 */
-    border-color: #337ECC;
-}
-
-.page-actions .el-button {
-    font-size: 16px;
-    padding: 12px 0;
-}
-
-.mt-4 {
-    margin-top: 16px;
-}
-
-:deep(.el-dialog__title) {
-    font-weight: 600;
-}
-
-:deep(.el-dialog__body) {
-    font-size: 15px;
-}
-</style>
