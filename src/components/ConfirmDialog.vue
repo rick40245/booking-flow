@@ -8,6 +8,7 @@
         </template>
     </el-dialog>
 </template>
+
 <script setup lang="ts">
 import { defineProps, defineEmits, computed } from 'vue'
 const props = defineProps<{ visible: boolean }>()
@@ -25,4 +26,3 @@ function onCancel() {
     emit('cancel')
 }
 </script>
-<style scoped></style>
