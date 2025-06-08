@@ -1,21 +1,21 @@
 /**
- * 表單驗證相關的 TypeScript 類型定義
- * 針對 Element Plus 表單驗證提供完整的類型支援
+ * TypeScript type definitions related to form validation.
+ * Provides full type support for Element Plus form validation.
  */
 
 import type { FormItemRule } from 'element-plus'
 
 /**
- * 驗證回調函數類型
- * Element Plus 表單驗證器使用的回調函數
+ * Validation callback function type.
+ * Callback function used by Element Plus form validators.
  */
 export type ValidationCallback = (error?: Error) => void
 
 /**
- * 自定義驗證器函數類型
- * @param rule - 驗證規則
- * @param value - 驗證的值
- * @param callback - 驗證回調
+ * Custom validator function type.
+ * @param rule - Validation rule.
+ * @param value - Value to validate.
+ * @param callback - Validation callback.
  */
 export type ValidatorFunction = (
   rule: unknown,
@@ -24,141 +24,141 @@ export type ValidatorFunction = (
 ) => void | Promise<void>
 
 /**
- * 表單驗證規則類型
- * Element Plus FormRules 的增強版本
+ * Form validation rules type.
+ * Enhanced version of Element Plus FormRules.
  */
 export type FormRules<T = Record<string, unknown>> = Partial<Record<keyof T, FormItemRule[]>>
 
 /**
- * 驗證觸發時機
+ * Validation trigger timing.
  */
 export type ValidationTrigger = 'blur' | 'change' | ['blur', 'change']
 
 /**
- * 驗證規則建構器選項
+ * Validation rule builder options.
  */
 export interface ValidationRuleOptions {
-  /** 觸發時機 */
+  /** Trigger timing. */
   trigger?: ValidationTrigger
-  /** 錯誤訊息 */
+  /** Error message. */
   message?: string
-  /** 是否必填 */
+  /** Whether it is required. */
   required?: boolean
-  /** 最小長度 */
+  /** Minimum length. */
   min?: number
-  /** 最大長度 */
+  /** Maximum length. */
   max?: number
-  /** 正則表達式 */
+  /** Regular expression. */
   pattern?: RegExp
-  /** 自定義驗證器 */
+  /** Custom validator. */
   validator?: ValidatorFunction
-  /** 驗證類型 */
+  /** Validation type. */
   type?: 'string' | 'number' | 'boolean' | 'array' | 'email' | 'url' | 'date'
 }
 
 /**
- * 表單驗證狀態
+ * Form validation state.
  */
 export interface ValidationState {
-  /** 是否正在驗證 */
+  /** Whether it is currently validating. */
   isValidating: boolean
-  /** 是否驗證通過 */
+  /** Whether validation passed. */
   isValid: boolean
-  /** 錯誤訊息 */
+  /** Error messages. */
   errors: Record<string, string>
-  /** 觸碰過的欄位 */
+  /** Touched fields. */
   touched: Record<string, boolean>
-  /** 髒欄位（已修改） */
+  /** Dirty fields (modified). */
   dirty: Record<string, boolean>
 }
 
 /**
- * 表單欄位定義
+ * Form field definition.
  */
 export interface FormField<T = Record<string, unknown>> {
-  /** 欄位名稱 */
+  /** Field name. */
   name: keyof T
-  /** 欄位標籤 */
+  /** Field label. */
   label: string
-  /** 欄位類型 */
+  /** Field type. */
   type: 'text' | 'number' | 'email' | 'tel' | 'date' | 'select' | 'radio' | 'checkbox' | 'textarea'
-  /** 預設值 */
+  /** Default value. */
   defaultValue?: unknown
-  /** 占位符 */
+  /** Placeholder. */
   placeholder?: string
-  /** 是否必填 */
+  /** Whether it is required. */
   required?: boolean
-  /** 是否禁用 */
+  /** Whether it is disabled. */
   disabled?: boolean
-  /** 是否唯讀 */
+  /** Whether it is read-only. */
   readonly?: boolean
-  /** 驗證規則 */
+  /** Validation rules. */
   rules?: FormItemRule[]
-  /** 選項（用於 select, radio, checkbox） */
+  /** Options (for select, radio, checkbox). */
   options?: Array<{
     label: string
     value: unknown
     disabled?: boolean
   }>
-  /** 其他屬性 */
+  /** Other properties. */
   props?: Record<string, unknown>
 }
 
 /**
- * 表單配置
+ * Form configuration.
  */
 export interface FormConfig<T = Record<string, unknown>> {
-  /** 表單欄位 */
+  /** Form fields. */
   fields: FormField<T>[]
-  /** 標籤寬度 */
+  /** Label width. */
   labelWidth?: string
-  /** 標籤位置 */
+  /** Label position. */
   labelPosition?: 'left' | 'right' | 'top'
-  /** 表單大小 */
+  /** Form size. */
   size?: 'large' | 'default' | 'small'
-  /** 是否行內表單 */
+  /** Whether it is an inline form. */
   inline?: boolean
-  /** 是否顯示必填星號 */
+  /** Whether to hide the required asterisk. */
   hideRequiredAsterisk?: boolean
-  /** 是否顯示錯誤訊息 */
+  /** Whether to show error messages. */
   showMessage?: boolean
-  /** 是否行內顯示錯誤訊息 */
+  /** Whether to show error messages inline. */
   inlineMessage?: boolean
-  /** 是否滾動到錯誤欄位 */
+  /** Whether to scroll to the error field. */
   scrollToError?: boolean
 }
 
 /**
- * 驗證結果
+ * Validation result.
  */
 export interface ValidationResult {
-  /** 是否驗證通過 */
+  /** Whether validation passed. */
   valid: boolean
-  /** 錯誤欄位 */
+  /** Error fields. */
   errors?: Array<{
     field: string
     message: string
   }>
-  /** 第一個錯誤 */
+  /** First error. */
   firstError?: string
 }
 
 /**
- * 動態表單項目
+ * Dynamic form item.
  */
 export interface DynamicFormItem {
-  /** 唯一標識 */
+  /** Unique identifier. */
   id: string | number
-  /** 表單資料 */
+  /** Form data. */
   data: Record<string, unknown>
-  /** 驗證規則 */
+  /** Validation rules. */
   rules?: FormRules
-  /** 是否展開/顯示 */
+  /** Whether it is expanded/shown. */
   expanded?: boolean
 }
 
 /**
- * 表單提交處理器
+ * Form submit handler.
  */
 export type FormSubmitHandler<T = Record<string, unknown>> = (
   data: T,
@@ -166,12 +166,12 @@ export type FormSubmitHandler<T = Record<string, unknown>> = (
 ) => void | Promise<void>
 
 /**
- * 表單重置處理器
+ * Form reset handler.
  */
 export type FormResetHandler = () => void
 
 /**
- * 欄位變更處理器
+ * Field change handler.
  */
 export type FieldChangeHandler<T = Record<string, unknown>> = (
   field: keyof T,
@@ -180,42 +180,42 @@ export type FieldChangeHandler<T = Record<string, unknown>> = (
 ) => void
 
 /**
- * 驗證錯誤處理器
+ * Validation error handler.
  */
 export type ValidationErrorHandler = (errors: ValidationResult['errors']) => void
 
 /**
- * 表單事件
+ * Form events.
  */
 export interface FormEvents<T = Record<string, unknown>> {
-  /** 提交事件 */
+  /** Submit event. */
   onSubmit?: FormSubmitHandler<T>
-  /** 重置事件 */
+  /** Reset event. */
   onReset?: FormResetHandler
-  /** 欄位變更事件 */
+  /** Field change event. */
   onChange?: FieldChangeHandler<T>
-  /** 驗證錯誤事件 */
+  /** Validation error event. */
   onValidationError?: ValidationErrorHandler
-  /** 驗證成功事件 */
+  /** Validation success event. */
   onValidationSuccess?: () => void
 }
 
 /**
- * 表單實例方法
+ * Form instance methods.
  */
 export interface FormMethods {
-  /** 驗證整個表單 */
+  /** Validate the entire form. */
   validate(): Promise<ValidationResult>
-  /** 驗證特定欄位 */
+  /** Validate specific fields. */
   validateField(field: string | string[]): Promise<ValidationResult>
-  /** 重置表單 */
+  /** Reset the form. */
   resetFields(): void
-  /** 清除驗證 */
+  /** Clear validation. */
   clearValidate(field?: string | string[]): void
-  /** 滾動到錯誤欄位 */
+  /** Scroll to the error field. */
   scrollToField(field: string): void
-  /** 取得表單資料 */
+  /** Get form data. */
   getFormData(): Record<string, unknown>
-  /** 設定表單資料 */
+  /** Set form data. */
   setFormData(data: Record<string, unknown>): void
 }

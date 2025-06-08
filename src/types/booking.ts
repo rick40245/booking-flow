@@ -1,10 +1,10 @@
 /**
- * 預約系統相關的 TypeScript 類型定義
- * 集中管理所有預約流程中使用的介面和類型
+ * TypeScript type definitions related to the booking system.
+ * Centralizes all interfaces and types used in the booking process.
  */
 
 /**
- * 使用者基本資訊介面
+ * Basic user information interface.
  */
 export interface UserInfo {
   name: string
@@ -13,60 +13,60 @@ export interface UserInfo {
 }
 
 /**
- * 額外預約人介面
- * 繼承自 UserInfo，目前與 UserInfo 相同，但保留此接口以便未來擴展額外預約人特有的欄位
+ * Extra booker interface.
+ * Inherits from UserInfo, currently identical to UserInfo, but retained for future expansion of extra booker-specific fields.
  */
 export interface ExtraPerson extends UserInfo {
-  /** 額外預約人的特殊需求或備註 */
+  /** Special requests or notes for the extra booker. */
   specialRequests?: string
 }
 
 /**
- * 預約表單資料介面
+ * Booking form data interface.
  */
 export interface BookingFormData {
-  /** 預約總人數 */
+  /** Total number of people for the booking. */
   totalPeople: number
-  /** 預約日期 (YYYY-MM-DD) */
+  /** Booking date (YYYY-MM-DD). */
   date: string
-  /** 預約時段 (HH:mm) */
+  /** Booking time slot (HH:mm). */
   timeSlot: string
-  /** 主要預約人姓名 */
+  /** Name of the main booker. */
   name: string
-  /** 主要預約人電話 */
+  /** Phone number of the main booker. */
   phone: string
-  /** 主要預約人 Email */
+  /** Email of the main booker. */
   email: string
-  /** 額外預約人列表 */
+  /** List of extra bookers. */
   extraPersons: ExtraPerson[]
-  /** 服務項目 ID */
+  /** Service item ID. */
   serviceId?: number
-  /** 選擇的服務人員 ID */
+  /** Selected service staff ID. */
   selectedStaffId?: number
 }
 
 /**
- * 預約狀態類型
+ * Booking status type.
  */
 export type BookingStatus = 'pending' | 'confirmed' | 'cancelled'
 
 /**
- * 完整預約資料介面（包含系統資訊）
+ * Complete booking data interface (including system information).
  */
 export interface BookingData extends BookingFormData {
-  /** 預約唯一識別碼 */
+  /** Unique identifier for the booking. */
   id?: string
-  /** 預約狀態 */
+  /** Booking status. */
   status?: BookingStatus
-  /** 建立時間 (ISO 8601) */
+  /** Creation time (ISO 8601). */
   createdAt?: string
-  /** 更新時間 (ISO 8601) */
+  /** Update time (ISO 8601). */
   updatedAt?: string
 }
 
 /**
- * 預約項目介面（舊版，待廢棄）
- * @deprecated 使用 BookingData 代替
+ * Booking item interface (legacy, to be deprecated).
+ * @deprecated Use BookingData instead.
  */
 export interface BookingItem {
   serviceId: number | null
@@ -77,102 +77,102 @@ export interface BookingItem {
 }
 
 /**
- * 預約顯示資訊介面（用於列表展示）
+ * Booking display information interface (for list presentation).
  */
 export interface BookingDisplayInfo extends BookingData {
-  /** 原始索引（用於編輯） */
+  /** Original index (for editing). */
   originalIndex: number
-  /** 服務名稱 */
+  /** Service name. */
   serviceName: string
-  /** 服務人員名稱 */
+  /** Staff member name. */
   staffName: string
-  /** 價格 */
+  /** Price. */
   price: number
-  /** 格式化的日期時間 */
+  /** Formatted date and time. */
   formattedDateTime: string
-  /** 主要預約人顯示文字 */
+  /** Display text for the main booker. */
   mainPersonDisplay: string
-  /** 額外預約人顯示文字陣列 */
+  /** Array of display text for extra bookers. */
   extraPersonsDisplay: string[]
 }
 
 /**
- * 預約驗證結果介面
+ * Booking validation result interface.
  */
 export interface BookingValidationResult {
-  /** 是否有效 */
+  /** Whether the validation is valid. */
   isValid: boolean
-  /** 錯誤訊息 */
+  /** Error message. */
   errorMessage?: string
-  /** 錯誤欄位 */
+  /** Field with the error. */
   errorField?: keyof BookingFormData
 }
 
 /**
- * 預約統計資訊介面
+ * Booking statistics interface.
  */
 export interface BookingStatistics {
-  /** 總預約數 */
+  /** Total number of bookings. */
   totalBookings: number
-  /** 待確認預約數 */
+  /** Number of pending bookings. */
   pendingBookings: number
-  /** 已確認預約數 */
+  /** Number of confirmed bookings. */
   confirmedBookings: number
-  /** 已取消預約數 */
+  /** Number of cancelled bookings. */
   cancelledBookings: number
-  /** 總金額 */
+  /** Total amount. */
   totalAmount: number
 }
 
 /**
- * 預約篩選條件介面
+ * Booking filter criteria interface.
  */
 export interface BookingFilterCriteria {
-  /** 狀態篩選 */
+  /** Filter by status. */
   status?: BookingStatus
-  /** 日期範圍 - 開始日期 */
+  /** Date range - start date. */
   startDate?: string
-  /** 日期範圍 - 結束日期 */
+  /** Date range - end date. */
   endDate?: string
-  /** 服務項目 ID */
+  /** Service item ID. */
   serviceId?: number
-  /** 服務人員 ID */
+  /** Staff member ID. */
   staffId?: number
-  /** 搜尋關鍵字（姓名、電話） */
+  /** Search keyword (name, phone). */
   keyword?: string
 }
 
 /**
- * 預約排序選項
+ * Booking sort options.
  */
 export type BookingSortOption = 'date-asc' | 'date-desc' | 'price-asc' | 'price-desc' | 'status'
 
 /**
- * 預約列表查詢參數介面
+ * Booking list query parameters interface.
  */
 export interface BookingQueryParams {
-  /** 篩選條件 */
+  /** Filter criteria. */
   filters?: BookingFilterCriteria
-  /** 排序選項 */
+  /** Sort options. */
   sortBy?: BookingSortOption
-  /** 頁碼（從 1 開始） */
+  /** Page number (starting from 1). */
   page?: number
-  /** 每頁筆數 */
+  /** Number of items per page. */
   pageSize?: number
 }
 
 /**
- * 預約列表回應介面
+ * Booking list response interface.
  */
 export interface BookingListResponse {
-  /** 預約資料陣列 */
+  /** Array of booking data. */
   items: BookingData[]
-  /** 總筆數 */
+  /** Total number of items. */
   total: number
-  /** 當前頁碼 */
+  /** Current page number. */
   page: number
-  /** 每頁筆數 */
+  /** Number of items per page. */
   pageSize: number
-  /** 總頁數 */
+  /** Total number of pages. */
   totalPages: number
 }

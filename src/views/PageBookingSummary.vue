@@ -15,7 +15,7 @@
         <h2 class="text-lg font-semibold text-gray-800">預約內容與預約人資訊</h2>
       </div>
 
-      <!-- 區塊1 - 預約內容 -->
+      <!-- Block 1 - Booking Details -->
       <div class="mb-4 relative pb-10">
         <div class="grid grid-cols-[auto_1fr] gap-y-2 gap-x-4 items-start">
           <span class="font-medium text-gray-600 text-sm">預約日期時間:</span>
@@ -39,10 +39,10 @@
         >
       </div>
 
-      <!-- 黑色分割線 -->
+      <!-- Black Divider Line -->
       <div style="border-top: 1px solid #666666; margin: 20px 0"></div>
 
-      <!-- 區塊2 - 預約人資訊 -->
+      <!-- Block 2 - Booker Information -->
       <div class="pt-3 pb-10 relative">
         <h3 class="text-base font-semibold mb-3 text-gray-700">預約人資訊</h3>
         <div class="grid grid-cols-[auto_1fr] gap-y-2 gap-x-4 items-start">
@@ -87,7 +87,7 @@
       >
     </div>
 
-    <!-- 流程中斷警告 Dialog -->
+    <!-- Process Interruption Warning Dialog -->
     <ConfirmDialog
       v-model:visible="showConfirmDialog"
       title="中斷流程警告"
@@ -117,7 +117,7 @@ const serviceStore = useServiceStore()
 const showConfirmDialog = ref(false)
 let nextCallback: (() => void) | null = null
 
-// 從 store 獲取預約項目，並加入詳細資訊
+// Get booking items from store and add detailed information
 const bookingItems = computed(() => {
   return bookingStore.bookingHistory.map((item: BookingData, index) => {
     const service = item.serviceId ? serviceStore.getServiceById(item.serviceId) : null
@@ -128,20 +128,20 @@ const bookingItems = computed(() => {
     const formattedDate = `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`
     const formattedTime = item.timeSlot || ''
 
-    const staffName = staff?.name || (staff as { staffName?: string })?.staffName || '未指定'
-    const itemPrice = staff?.price !== undefined ? staff.price : 0 // 優先使用 staff.price，否則為 0
+    const staffName = staff?.name || (staff as { staffName?: string })?.staffName || '未指定' // Reverted
+    const itemPrice = staff?.price !== undefined ? staff.price : 0 // Prioritize staff.price, otherwise 0
 
     return {
       ...item,
       id: item.id || `temp-id-${index}`,
       originalIndex: index,
-      serviceName: service ? service.name : '未知服務',
+      serviceName: service ? service.name : '未知服務', // Reverted
       staffName: staffName,
       price: itemPrice,
       formattedDateTime: `${formattedDate} ${formattedTime}`,
       mainPersonDisplay: `${item.name} (${item.phone})`,
       extraPersonsDisplay: item.extraPersons.map((p, i) => {
-        const contact = p.phone ? p.phone : p.email ? p.email : '無聯絡方式'
+        const contact = p.phone ? p.phone : p.email ? p.email : '無聯絡方式' // Reverted
         return `${i + 1}. ${p.name} (${contact})`
       }),
     }
@@ -152,70 +152,70 @@ function editItem(originalIndex: number) {
   const itemToEdit = bookingStore.bookingHistory[originalIndex]
 
   if (itemToEdit) {
-    // 將要編輯的項目資料填充到 formData
+    // Populate formData with the item to be edited
     bookingStore.formData = { ...itemToEdit }
 
-    // 設定編輯模式和索引
+    // Set edit mode and index
     bookingStore.setEditingItemIndex(originalIndex)
 
-    // 設定選中的服務（重要：讓頁面2知道當前選擇的服務）
+    // Set selected service (important: let page 2 know the currently selected service)
     if (itemToEdit.serviceId) {
       bookingStore.setSelectedService(itemToEdit.serviceId)
     }
 
-    // 跳轉回 PageBookingForm
+    // Navigate back to PageBookingForm
     router
       .push({ name: 'booking-form' })
       .then(() => {})
       .catch((error) => {
-        console.error('❌ 跳轉失敗:', error)
+        console.error('❌ 跳轉失敗:', error) // Reverted
       })
   } else {
-    ElMessage.error('找不到要編輯的項目')
+    ElMessage.error('找不到要編輯的項目') // Reverted
   }
 }
 
 async function removeItem(originalIndex: number) {
   try {
-    await ElMessageBox.confirm('確定要刪除此預約項目嗎？', '確認刪除', {
-      confirmButtonText: '確定',
-      cancelButtonText: '取消',
+    await ElMessageBox.confirm('確定要刪除此預約項目嗎？', '確認刪除', { // Reverted
+      confirmButtonText: '確定', // Reverted
+      cancelButtonText: '取消', // Reverted
       type: 'warning',
     })
     bookingStore.removeBookingFromHistory(originalIndex)
-    ElMessage.success('項目已刪除')
+    ElMessage.success('項目已刪除') // Reverted
   } catch (error) {
     if (error !== 'cancel') {
-      ElMessage.error('刪除失敗')
+      ElMessage.error('刪除失敗') // Reverted
     }
   }
 }
 
 function addNewItem() {
-  // 完全重置所有狀態
+  // Completely reset all state
   bookingStore.resetAllState()
 
-  // 跳轉到頁面1
+  // Navigate to page 1
   router
     .push({ name: 'service-list' })
     .then(() => {})
     .catch((error) => {
-      console.error('❌ 跳轉失敗:', error)
+      console.error('❌ 跳轉失敗:', error) // Reverted
     })
 }
 
 function goToCheckout() {
-  ElMessage.info('「前往結帳」功能尚未開放')
+  ElMessage.info('「前往結帳」功能尚未開放') // Reverted
 }
 
 onBeforeRouteLeave((to, from, next) => {
-  // 如果是跳轉到 service-list（新增項目）或 booking-form（編輯項目），允許跳轉
+  // If navigating to service-list (add item) or booking-form (edit item), allow navigation
   if (to.name === 'service-list' || to.name === 'booking-form') {
     next()
     return
   }
 
-  // 其他情況下，如果有預約項目，顯示確認對話框
+  // Otherwise, if there are booking items, show confirmation dialog
   if (bookingItems.value.length > 0) {
     showConfirmDialog.value = true
     nextCallback = () => {

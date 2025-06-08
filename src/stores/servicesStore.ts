@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { filterAvailableSlots } from '@/utils/date'
 
 /**
- * 服務人員介面
+ * Staff Member Interface
  */
 export interface Staff {
   id: number
@@ -14,7 +14,7 @@ export interface Staff {
 }
 
 /**
- * 服務項目介面
+ * Service Item Interface
  */
 export interface Service {
   id: number
@@ -24,7 +24,7 @@ export interface Service {
 }
 
 /**
- * 服務人員擴展資訊介面（用於頁面顯示）
+ * Staff Display Information Interface (for page display)
  */
 export interface StaffDisplayInfo {
   serviceId: number
@@ -36,14 +36,14 @@ export interface StaffDisplayInfo {
 }
 
 /**
- * 服務與人員管理 Store
- * 管理所有服務項目和服務人員的資料
+ * Service and Staff Management Store
+ * Manages all service items and staff member data.
  */
 export const useServiceStore = defineStore('service', {
   state: () => ({
     /**
-     * 服務人員列表
-     * TODO: 未來應從 API 取得
+     * Staff Member List
+     * TODO: Should be fetched from API in the future
      */
     staffMembers: [
       {
@@ -52,7 +52,7 @@ export const useServiceStore = defineStore('service', {
         price: 1000,
         workTime: '9:00-18:00',
         availableSlots: ['9:00', '10:00', '11:00', '14:00', '15:00', '16:00', '17:00'],
-        unavailableSlots: ['12:00', '13:00'], // 午休時間
+        unavailableSlots: ['12:00', '13:00'], // Lunch break
       },
       {
         id: 2,
@@ -60,7 +60,7 @@ export const useServiceStore = defineStore('service', {
         price: 1200,
         workTime: '10:00-19:00',
         availableSlots: ['10:00', '11:00', '14:00', '15:00', '16:00', '17:00', '18:00'],
-        unavailableSlots: ['12:00', '13:00'], // 午休時間
+        unavailableSlots: ['12:00', '13:00'], // Lunch break
       },
       {
         id: 3,
@@ -68,7 +68,7 @@ export const useServiceStore = defineStore('service', {
         price: 1300,
         workTime: '10:00-20:00',
         availableSlots: ['10:00', '11:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00'],
-        unavailableSlots: ['12:00', '13:00'], // 午休時間
+        unavailableSlots: ['12:00', '13:00'], // Lunch break
       },
       {
         id: 4,
@@ -76,7 +76,7 @@ export const useServiceStore = defineStore('service', {
         price: 1500,
         workTime: '11:00-19:00',
         availableSlots: ['11:00', '12:00', '14:00', '15:00', '16:00', '17:00', '18:00'],
-        unavailableSlots: ['13:00'], // 午休時間
+        unavailableSlots: ['13:00'], // Lunch break
       },
       {
         id: 5,
@@ -84,53 +84,53 @@ export const useServiceStore = defineStore('service', {
         price: 1800,
         workTime: '9:00-17:00',
         availableSlots: ['9:00', '10:00', '11:00', '14:00', '15:00', '16:00'],
-        unavailableSlots: ['12:00', '13:00'], // 午休時間
+        unavailableSlots: ['12:00', '13:00'], // Lunch break
       },
     ] as Staff[],
 
     /**
-     * 服務項目列表
-     * TODO: 未來應從 API 取得
+     * Service Item List
+     * TODO: Should be fetched from API in the future
      */
     services: [
       {
         id: 1,
         name: '臉部護理',
         serviceType: 'facial',
-        staffIds: [1, 2], // 張美容師、陳美容師
+        staffIds: [1, 2], // Beautician Zhang, Beautician Chen
       },
       {
         id: 2,
         name: '按摩',
         serviceType: 'massage',
-        staffIds: [3], // 李按摩師
+        staffIds: [3], // Masseur Li
       },
       {
         id: 3,
         name: '造型設計',
         serviceType: 'styling',
-        staffIds: [4, 5], // 王造型師、林造型師
+        staffIds: [4, 5], // Stylist Wang, Stylist Lin
       },
     ] as Service[],
   }),
 
   getters: {
     /**
-     * 取得所有服務類型
+     * Get all service types
      */
     serviceTypes(state): string[] {
       return [...new Set(state.services.map((s) => s.serviceType))]
     },
 
     /**
-     * 取得所有服務人員數量
+     * Get total number of staff members
      */
     totalStaffCount(state): number {
       return state.staffMembers.length
     },
 
     /**
-     * 取得所有服務項目數量
+     * Get total number of service items
      */
     totalServiceCount(state): number {
       return state.services.length
@@ -139,36 +139,36 @@ export const useServiceStore = defineStore('service', {
 
   actions: {
     /**
-     * 從 API 取得服務列表
-     * TODO: 實作 API 呼叫
+     * Fetch service list from API
+     * TODO: Implement API call
      */
     async fetchServices(): Promise<Service[]> {
-      // 模擬 API 呼叫
+      // Simulate API call
       return Promise.resolve(this.services)
     },
 
     /**
-     * 根據 ID 取得服務項目
-     * @param id - 服務 ID
-     * @returns 服務項目或 undefined
+     * Get service item by ID
+     * @param id - Service ID
+     * @returns Service item or undefined
      */
     getServiceById(id: number): Service | undefined {
       return this.services.find((service) => service.id === id)
     },
 
     /**
-     * 根據 ID 取得服務人員
-     * @param id - 服務人員 ID
-     * @returns 服務人員或 undefined
+     * Get staff member by ID
+     * @param id - Staff ID
+     * @returns Staff member or undefined
      */
     getStaffById(id: number): Staff | undefined {
       return this.staffMembers.find((staff) => staff.id === id)
     },
 
     /**
-     * 根據服務類型取得服務人員列表（包含擴展資訊）
-     * @param serviceType - 服務類型
-     * @returns 服務人員擴展資訊陣列
+     * Get staff list by service type (includes extended information)
+     * @param serviceType - Service type
+     * @returns Array of staff display information
      */
     getStaffByServiceType(serviceType: string): (StaffDisplayInfo | null)[] {
       const service = this.services.find((s) => s.serviceType === serviceType)
@@ -192,9 +192,9 @@ export const useServiceStore = defineStore('service', {
     },
 
     /**
-     * 根據服務 ID 取得服務類型
-     * @param serviceId - 服務 ID
-     * @returns 服務類型或 null
+     * Get service type by service ID
+     * @param serviceId - Service ID
+     * @returns Service type or null
      */
     getServiceTypeById(serviceId: number): string | null {
       const service = this.getServiceById(serviceId)
@@ -202,9 +202,9 @@ export const useServiceStore = defineStore('service', {
     },
 
     /**
-     * 根據服務 ID 取得服務人員列表
-     * @param serviceId - 服務 ID
-     * @returns 服務人員陣列
+     * Get staff list by service ID
+     * @param serviceId - Service ID
+     * @returns Array of staff members
      */
     getStaffByServiceId(serviceId: number): Staff[] {
       const service = this.getServiceById(serviceId)
@@ -216,10 +216,10 @@ export const useServiceStore = defineStore('service', {
     },
 
     /**
-     * 取得服務人員的可用時段
-     * @param staffId - 服務人員 ID
-     * @param date - 選擇的日期（可選）
-     * @returns 可用時段陣列
+     * Get available time slots for a staff member
+     * @param staffId - Staff ID
+     * @param date - Selected date (optional)
+     * @returns Array of available time slots
      */
     getAvailableSlots(staffId: number, date?: string): string[] {
       const staff = this.getStaffById(staffId)
@@ -227,7 +227,7 @@ export const useServiceStore = defineStore('service', {
 
       const slots = staff.availableSlots || []
 
-      // 如果有指定日期，過濾已過去的時段
+      // If a date is specified, filter out past time slots
       if (date) {
         return filterAvailableSlots(slots, date)
       }
@@ -236,11 +236,11 @@ export const useServiceStore = defineStore('service', {
     },
 
     /**
-     * 檢查特定時段是否可用
-     * @param staffId - 服務人員 ID
-     * @param date - 日期
-     * @param slot - 時段
-     * @returns 是否可用
+     * Check if a specific time slot is available
+     * @param staffId - Staff ID
+     * @param date - Date
+     * @param slot - Time slot
+     * @returns True if available, false otherwise
      */
     isSlotAvailable(staffId: number, date: string, slot: string): boolean {
       const availableSlots = this.getAvailableSlots(staffId, date)
@@ -248,9 +248,9 @@ export const useServiceStore = defineStore('service', {
     },
 
     /**
-     * 取得服務的價格範圍
-     * @param serviceId - 服務 ID
-     * @returns 價格範圍物件 { min, max }
+     * Get the price range for a service
+     * @param serviceId - Service ID
+     * @returns Price range object { min, max } or null
      */
     getServicePriceRange(serviceId: number): { min: number; max: number } | null {
       const staffList = this.getStaffByServiceId(serviceId)

@@ -30,7 +30,7 @@ const router = useRouter()
 const serviceStore = useServiceStore()
 const bookingStore = useBookingStore()
 
-// 將服務按類型分組
+// Group services by type
 const serviceTypes = computed(() => {
   const groups = new Map()
 
@@ -38,7 +38,7 @@ const serviceTypes = computed(() => {
     if (!groups.has(service.serviceType)) {
       groups.set(service.serviceType, {
         type: service.serviceType,
-        id: service.id, // 使用第一個服務的ID作為代表
+        id: service.id, // Use the ID of the first service as representative
         name: service.name,
         staffCount: 0,
         staffList: [],
@@ -49,7 +49,7 @@ const serviceTypes = computed(() => {
 
     const group = groups.get(service.serviceType)
 
-    // 計算該服務類型下所有服務人員的資訊
+    // Calculate information for all service staff under this service type
     service.staffIds.forEach((staffId) => {
       const staff = serviceStore.getStaffById(staffId)
       if (staff) {
@@ -61,7 +61,7 @@ const serviceTypes = computed(() => {
     })
   })
 
-  // 處理只有一個服務人員的情況
+  // Handle cases where there is only one service staff
   groups.forEach((group) => {
     if (group.minPrice === Infinity) {
       group.minPrice = 0
@@ -75,10 +75,10 @@ const selectedServiceType = ref(null)
 const showConfirm = ref(false)
 
 function handleSelect(serviceTypeId: number) {
-  // 設定選中的服務到 store (使用該類型的第一個服務ID)
+  // Set the selected service to the store (using the ID of the first service of this type)
   bookingStore.setSelectedService(serviceTypeId)
 
-  // 跳轉到頁面2
+  // Navigate to page 2
   router.push({ name: 'booking-form' })
 }
 

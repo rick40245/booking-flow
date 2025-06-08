@@ -1,9 +1,9 @@
 /**
- * 預約相關常數定義
- * 集中管理所有預約流程中使用的常數，便於維護和修改
+ * Booking Related Constant Definitions
+ * Centralize all constants used in the booking process for easy maintenance and modification.
  */
 
-/** 預約狀態枚舉 */
+/** Booking Status Enum */
 export const BOOKING_STATUS = {
   PENDING: 'pending',
   CONFIRMED: 'confirmed',
@@ -12,14 +12,14 @@ export const BOOKING_STATUS = {
 
 export type BookingStatus = (typeof BOOKING_STATUS)[keyof typeof BOOKING_STATUS]
 
-/** 預約人數限制 */
+/** Booking Number Limits */
 export const BOOKING_LIMITS = {
   MIN_PEOPLE: 1,
   MAX_PEOPLE: 5,
   MAX_EXTRA_PEOPLE: 4,
 } as const
 
-/** 表單預設值 */
+/** Form Default Values */
 export const DEFAULT_FORM_VALUES = {
   TOTAL_PEOPLE: 1,
   DATE: '',
@@ -29,35 +29,35 @@ export const DEFAULT_FORM_VALUES = {
   EMAIL: '',
 } as const
 
-/** 驗證規則 */
+/** Validation Rules */
 export const VALIDATION_RULES = {
-  PHONE_PATTERN: /^09\d{8}$/,
+  PHONE_PATTERN: /^09\d{8}$/, // Keep regex as is, it's for Taiwan phone numbers
   EMAIL_PATTERN: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
   NAME_MAX_LENGTH: 20,
-  PHONE_PLACEHOLDER: '09xxxxxxxx',
+  PHONE_PLACEHOLDER: '09xxxxxxxx', // Keep placeholder as is for Taiwan phone numbers
 } as const
 
-/** 路由名稱 */
+/** Route Names */
 export const ROUTE_NAMES = {
   SERVICE_LIST: 'service-list',
   BOOKING_FORM: 'booking-form',
   BOOKING_SUMMARY: 'booking-summary',
 } as const
 
-/** 儲存鍵值 */
+/** Storage Keys */
 export const STORAGE_KEYS = {
   BOOKING_STORE: 'booking-store',
   UI_STORE: 'ui-store',
 } as const
 
-/** 時間格式 */
+/** Time Formats */
 export const TIME_FORMATS = {
   DATE_DISPLAY: 'YYYY/MM/DD',
   TIME_SLOT_FORMAT: 'HH:mm',
   ISO_DATE_SPLIT: 'T',
 } as const
 
-/** 訊息文字 */
+/** Message Texts */
 export const MESSAGES = {
   ERRORS: {
     REQUIRED_FIELD: '此欄位為必填',
@@ -91,7 +91,7 @@ export const MESSAGES = {
   },
 } as const
 
-/** 樣式類別名稱 */
+/** Style Class Names */
 export const STYLE_CLASSES = {
   SELECTED_STAFF: 'border-blue-500 bg-blue-50 shadow-md',
   DEFAULT_STAFF: 'border-gray-500 bg-white hover:border-blue-400 hover:bg-blue-25',

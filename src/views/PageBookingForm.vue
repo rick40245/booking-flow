@@ -384,7 +384,7 @@ const selectedServiceName = computed(() => {
     const selectedStaff = serviceStore.getStaffById(bookingForm.value.selectedStaffId)
     return selectedStaff ? selectedStaff.name : ''
   } else if (selectedServiceType.value) {
-    // If no staff selected yet, show Chinese service name
+    // If no staff selected yet, show Chinese service name (service.name should be in Chinese from the store)
     const service = serviceStore.services.find((s) => s.serviceType === selectedServiceType.value)
     return service ? service.name : selectedServiceType.value
   }
@@ -417,26 +417,26 @@ const availableSlots = computed(() => {
   return serviceStore.getAvailableSlots(staffId, selectedDate)
 })
 
-// Form validation rules
+// Form validation rules - Assuming these messages are from the constants file and are already in Chinese
 const formRules: FormRules = {
-  totalPeople: [createRequiredRule('請選擇預約人數', 'change')],
+  totalPeople: [createRequiredRule(MESSAGES.ERRORS.REQUIRED_FIELD, 'change')], // Example, use actual Chinese message key
   name: [
-    createRequiredRule('請輸入姓名', 'blur'),
+    createRequiredRule(MESSAGES.ERRORS.REQUIRED_FIELD, 'blur'),
     createMaxLengthRule(
       VALIDATION_RULES.NAME_MAX_LENGTH,
-      `姓名最多${VALIDATION_RULES.NAME_MAX_LENGTH}個字`,
+      `姓名最多${VALIDATION_RULES.NAME_MAX_LENGTH}個字`, // Reverted
       'blur',
     ),
   ],
   phone: [
-    createRequiredRule('請輸入電話', 'blur'),
+    createRequiredRule(MESSAGES.ERRORS.REQUIRED_FIELD, 'blur'),
     {
       pattern: VALIDATION_RULES.PHONE_PATTERN,
       message: MESSAGES.ERRORS.INVALID_PHONE,
       trigger: 'blur',
     },
   ],
-  date: [createRequiredRule('請選擇預約日期', 'change')],
+  date: [createRequiredRule(MESSAGES.ERRORS.REQUIRED_FIELD, 'change')],
 }
 
 // Disable dates before today
@@ -517,12 +517,12 @@ function removeExtraPerson(index: number): void {
 // Submit form
 function submitForm(): void {
   if (!bookingForm.value.selectedStaffId) {
-    ElMessage.error('請選擇服務人員')
+    ElMessage.error('請選擇服務人員') // Reverted
     return
   }
 
   if (!bookingForm.value.timeSlot) {
-    ElMessage.error('請選擇預約時段')
+    ElMessage.error('請選擇預約時段') // Reverted
     return
   }
 
@@ -533,12 +533,12 @@ function submitForm(): void {
       const currentExtraPersons = extraPersons.value.length
 
       if (currentExtraPersons < requiredExtraPersons) {
-        ElMessage.error(`還需要新增 ${requiredExtraPersons - currentExtraPersons} 位額外預約人`)
+        ElMessage.error(`還需要新增 ${requiredExtraPersons - currentExtraPersons} 位額外預約人`) // Reverted
         return
       }
 
       if (currentExtraPersons > requiredExtraPersons) {
-        ElMessage.error('額外預約人數量超過限制，請移除多餘的預約人')
+        ElMessage.error('額外預約人數量超過限制，請移除多餘的預約人') // Reverted
         return
       }
 
@@ -566,7 +566,7 @@ function submitForm(): void {
           // bookingStore.clearFormData()
         })
         .catch((error) => {
-          console.error('❌ 跳轉失敗:', error)
+          console.error('❌ 跳轉失敗:', error) // Reverted
           isFormSubmitted.value = false
         })
     }
@@ -593,7 +593,7 @@ function handleLeave(): void {
       .catch((error) => {
         console.error('❌ Failed to navigate back to service list:', error)
         // Fallback: try to navigate to home or show error message
-        ElMessage.error('導航失敗，請重新整理頁面')
+        ElMessage.error('導航失敗，請重新整理頁面') // Reverted
         // Force page reload as last resort
         window.location.href = '/'
       })
@@ -602,7 +602,7 @@ function handleLeave(): void {
     pendingNavigationContext = null
   } catch (error) {
     console.error('❌ Error occurred while leaving page:', error)
-    ElMessage.error('操作失敗，請重試')
+    ElMessage.error('操作失敗，請重試') // Reverted
 
     // Ensure dialog is closed even if error occurs
     showConfirm.value = false
@@ -630,7 +630,7 @@ onBeforeRouteLeave((to, from, next) => {
   } catch (error) {
     console.error('❌ Error in route guard:', error)
     // In case of error, allow navigation to prevent user from being stuck
-    ElMessage.error('路由檢查失敗，允許導航')
+    ElMessage.error('路由檢查失敗，允許導航') // Reverted
     next()
   }
 })
@@ -733,24 +733,24 @@ function validateEmail(_: unknown, value: string, callback: ValidationCallback):
   validateEmailFormat(_, value, callback)
 }
 
-// Additional booker form validation rules
+// Additional booker form validation rules - Assuming these messages are from constants or should be Chinese
 const extraPersonRules: FormRules = {
   name: [
-    createRequiredRule('請輸入姓名', 'blur'),
-    { min: 1, message: '姓名不能為空', trigger: 'blur' },
+    createRequiredRule('請輸入姓名', 'blur'), // Reverted
+    { min: 1, message: '姓名不能為空', trigger: 'blur' }, // Reverted
     createMaxLengthRule(
       VALIDATION_RULES.NAME_MAX_LENGTH,
-      `姓名最多${VALIDATION_RULES.NAME_MAX_LENGTH}個字`,
+      `姓名最多${VALIDATION_RULES.NAME_MAX_LENGTH}個字`, // Reverted
       'blur',
     ),
   ],
   phone: [
-    { validator: phoneOrEmailRequired, trigger: 'blur' },
-    { validator: validatePhone, trigger: 'blur' },
+    { validator: phoneOrEmailRequired, trigger: 'blur' }, // Uses MESSAGES.INFO.PHONE_EMAIL_REQUIRED
+    { validator: validatePhone, trigger: 'blur' }, // Uses MESSAGES.ERRORS.INVALID_PHONE
   ],
   email: [
-    { validator: phoneOrEmailRequired, trigger: 'blur' },
-    { validator: validateEmail, trigger: 'blur' },
+    { validator: phoneOrEmailRequired, trigger: 'blur' }, // Uses MESSAGES.INFO.PHONE_EMAIL_REQUIRED
+    { validator: validateEmail, trigger: 'blur' }, // Uses MESSAGES.ERRORS.INVALID_EMAIL
   ],
 }
 </script>

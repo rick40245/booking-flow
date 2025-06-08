@@ -1,58 +1,58 @@
 /**
- * 服務系統相關的 TypeScript 類型定義
- * 集中管理所有服務和人員相關的介面和類型
+ * TypeScript type definitions related to the service system.
+ * Centralizes all interfaces and types related to services and staff.
  */
 
 /**
- * 服務人員基本資訊介面
+ * Basic staff member information interface.
  */
 export interface Staff {
-  /** 服務人員 ID */
+  /** Staff member ID. */
   id: number
-  /** 服務人員姓名 */
+  /** Staff member name. */
   name: string
-  /** 服務價格（每小時） */
+  /** Service price (per hour). */
   price: number
-  /** 工作時間描述 */
+  /** Work time description. */
   workTime: string
-  /** 可用時段陣列 */
+  /** Array of available time slots. */
   availableSlots: string[]
-  /** 不可用時段陣列（如午休） */
+  /** Array of unavailable time slots (e.g., lunch break). */
   unavailableSlots?: string[]
-  /** 服務人員照片 URL */
+  /** Staff member photo URL. */
   avatar?: string
-  /** 服務人員描述 */
+  /** Staff member description. */
   description?: string
-  /** 評分（1-5） */
+  /** Rating (1-5). */
   rating?: number
-  /** 服務次數 */
+  /** Number of services provided. */
   serviceCount?: number
 }
 
 /**
- * 服務項目介面
+ * Service item interface.
  */
 export interface Service {
-  /** 服務 ID */
+  /** Service ID. */
   id: number
-  /** 服務名稱 */
+  /** Service name. */
   name: string
-  /** 服務類型標識 */
+  /** Service type identifier. */
   serviceType: string
-  /** 提供此服務的人員 ID 陣列 */
+  /** Array of staff IDs providing this service. */
   staffIds: number[]
-  /** 服務描述 */
+  /** Service description. */
   description?: string
-  /** 服務時長（分鐘） */
+  /** Service duration (in minutes). */
   duration?: number
-  /** 服務圖片 URL */
+  /** Service image URL. */
   imageUrl?: string
-  /** 是否啟用 */
+  /** Whether the service is active. */
   isActive?: boolean
 }
 
 /**
- * 服務類型枚舉
+ * Service type enum.
  */
 export enum ServiceType {
   FACIAL = 'facial',
@@ -61,205 +61,205 @@ export enum ServiceType {
 }
 
 /**
- * 服務類型資訊介面
+ * Service type information interface.
  */
 export interface ServiceTypeInfo {
-  /** 類型標識 */
+  /** Type identifier. */
   type: ServiceType | string
-  /** 類型名稱 */
+  /** Type name. */
   name: string
-  /** 類型描述 */
+  /** Type description. */
   description?: string
-  /** 圖示名稱或 URL */
+  /** Icon name or URL. */
   icon?: string
 }
 
 /**
- * 服務人員擴展資訊介面（用於頁面顯示）
+ * Staff display information interface (for page display).
  */
 export interface StaffDisplayInfo {
-  /** 服務項目 ID */
+  /** Service item ID. */
   serviceId: number
-  /** 服務人員 ID */
+  /** Staff member ID. */
   staffId: number
-  /** 服務人員姓名 */
+  /** Staff member name. */
   staffName: string
-  /** 工作時間 */
+  /** Work time. */
   workTime: string
-  /** 價格 */
+  /** Price. */
   price: number
-  /** 可用時段 */
+  /** Available time slots. */
   availableSlots: string[]
 }
 
 /**
- * 服務統計資訊介面
+ * Service statistics interface.
  */
 export interface ServiceStatistics {
-  /** 服務 ID */
+  /** Service ID. */
   serviceId: number
-  /** 總預約數 */
+  /** Total number of bookings. */
   totalBookings: number
-  /** 總收入 */
+  /** Total revenue. */
   totalRevenue: number
-  /** 平均評分 */
+  /** Average rating. */
   averageRating: number
-  /** 取消率 */
+  /** Cancellation rate. */
   cancellationRate: number
 }
 
 /**
- * 服務人員統計資訊介面
+ * Staff statistics interface.
  */
 export interface StaffStatistics {
-  /** 服務人員 ID */
+  /** Staff member ID. */
   staffId: number
-  /** 總服務次數 */
+  /** Total number of services provided. */
   totalServices: number
-  /** 總收入 */
+  /** Total revenue. */
   totalRevenue: number
-  /** 平均評分 */
+  /** Average rating. */
   averageRating: number
-  /** 預約滿意度 */
+  /** Booking satisfaction rate. */
   satisfactionRate: number
-  /** 本月服務次數 */
+  /** Number of services provided this month. */
   monthlyServices: number
 }
 
 /**
- * 時段可用性介面
+ * Slot availability interface.
  */
 export interface SlotAvailability {
-  /** 時段 */
+  /** Time slot. */
   slot: string
-  /** 是否可用 */
+  /** Whether it is available. */
   isAvailable: boolean
-  /** 不可用原因 */
+  /** Reason for unavailability. */
   unavailableReason?: 'booked' | 'break' | 'off-work' | 'holiday'
 }
 
 /**
- * 服務人員排班介面
+ * Staff schedule interface.
  */
 export interface StaffSchedule {
-  /** 服務人員 ID */
+  /** Staff member ID. */
   staffId: number
-  /** 日期 (YYYY-MM-DD) */
+  /** Date (YYYY-MM-DD). */
   date: string
-  /** 是否工作日 */
+  /** Whether it is a working day. */
   isWorkingDay: boolean
-  /** 工作時段 */
+  /** Working time slots. */
   workingSlots?: string[]
-  /** 休息時段 */
+  /** Break time slots. */
   breakSlots?: string[]
-  /** 已預約時段 */
+  /** Booked time slots. */
   bookedSlots?: string[]
 }
 
 /**
- * 服務價格規則介面
+ * Service price rule interface.
  */
 export interface PriceRule {
-  /** 規則 ID */
+  /** Rule ID. */
   id: number
-  /** 服務 ID */
+  /** Service ID. */
   serviceId: number
-  /** 規則類型 */
+  /** Rule type. */
   type: 'weekday' | 'weekend' | 'holiday' | 'member' | 'promotion'
-  /** 價格調整（可以是固定金額或百分比） */
+  /** Price adjustment (can be a fixed amount or percentage). */
   adjustment: number
-  /** 是否為百分比 */
+  /** Whether it is a percentage. */
   isPercentage: boolean
-  /** 生效開始日期 */
+  /** Effective start date. */
   startDate?: string
-  /** 生效結束日期 */
+  /** Effective end date. */
   endDate?: string
-  /** 規則描述 */
+  /** Rule description. */
   description?: string
 }
 
 /**
- * 服務套餐介面
+ * Service package interface.
  */
 export interface ServicePackage {
-  /** 套餐 ID */
+  /** Package ID. */
   id: number
-  /** 套餐名稱 */
+  /** Package name. */
   name: string
-  /** 包含的服務 ID 陣列 */
+  /** Array of included service IDs. */
   serviceIds: number[]
-  /** 套餐價格 */
+  /** Package price. */
   price: number
-  /** 原價（用於顯示折扣） */
+  /** Original price (for displaying discount). */
   originalPrice: number
-  /** 套餐描述 */
+  /** Package description. */
   description?: string
-  /** 有效期限（天） */
+  /** Validity period (in days). */
   validityDays?: number
-  /** 是否啟用 */
+  /** Whether it is active. */
   isActive: boolean
 }
 
 /**
- * 服務分類介面
+ * Service category interface.
  */
 export interface ServiceCategory {
-  /** 分類 ID */
+  /** Category ID. */
   id: number
-  /** 分類名稱 */
+  /** Category name. */
   name: string
-  /** 父分類 ID */
+  /** Parent category ID. */
   parentId?: number
-  /** 排序順序 */
+  /** Sort order. */
   sortOrder: number
-  /** 分類描述 */
+  /** Category description. */
   description?: string
-  /** 是否顯示 */
+  /** Whether it is visible. */
   isVisible: boolean
 }
 
 /**
- * 服務搜尋參數介面
+ * Service search parameters interface.
  */
 export interface ServiceSearchParams {
-  /** 關鍵字 */
+  /** Keyword. */
   keyword?: string
-  /** 服務類型 */
+  /** Service type. */
   serviceType?: string
-  /** 價格範圍 - 最低價 */
+  /** Price range - minimum price. */
   minPrice?: number
-  /** 價格範圍 - 最高價 */
+  /** Price range - maximum price. */
   maxPrice?: number
-  /** 可用日期 */
+  /** Available date. */
   availableDate?: string
-  /** 可用時段 */
+  /** Available time slot. */
   availableSlot?: string
-  /** 服務人員 ID */
+  /** Staff member ID. */
   staffId?: number
-  /** 分類 ID */
+  /** Category ID. */
   categoryId?: number
 }
 
 /**
- * 服務評價介面
+ * Service review interface.
  */
 export interface ServiceReview {
-  /** 評價 ID */
+  /** Review ID. */
   id: number
-  /** 預約 ID */
+  /** Booking ID. */
   bookingId: string
-  /** 服務 ID */
+  /** Service ID. */
   serviceId: number
-  /** 服務人員 ID */
+  /** Staff member ID. */
   staffId: number
-  /** 評分（1-5） */
+  /** Rating (1-5). */
   rating: number
-  /** 評價內容 */
+  /** Review content. */
   comment?: string
-  /** 評價者姓名 */
+  /** Reviewer name. */
   reviewerName: string
-  /** 評價時間 */
+  /** Review time. */
   createdAt: string
-  /** 是否已驗證 */
+  /** Whether it is verified. */
   isVerified: boolean
 }
