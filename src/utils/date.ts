@@ -1,14 +1,14 @@
 /**
- * 日期相關工具函數
- * 提供統一的日期處理方法，確保整個應用的日期格式一致性
+ * Date-related utility functions
+ * Provides unified date processing methods to ensure date format consistency throughout the application.
  */
 
 import { TIME_FORMATS } from '@/constants/booking'
 
 /**
- * 格式化日期為 YYYY/MM/DD 格式
- * @param dateInput - 日期字串或日期物件
- * @returns 格式化後的日期字串
+ * Formats a date to YYYY/MM/DD format.
+ * @param dateInput - Date string or Date object.
+ * @returns Formatted date string.
  */
 export function formatDisplayDate(dateInput: string | Date | null | undefined): string {
   if (!dateInput) return ''
@@ -23,15 +23,15 @@ export function formatDisplayDate(dateInput: string | Date | null | undefined): 
 
     return `${year}/${month}/${day}`
   } catch (error) {
-    console.error('日期格式化錯誤:', error)
+    console.error('Date formatting error:', error)
     return ''
   }
 }
 
 /**
- * 格式化日期為 ISO 格式 (YYYY-MM-DD)
- * @param dateInput - 日期字串或日期物件
- * @returns ISO 格式的日期字串
+ * Formats a date to ISO format (YYYY-MM-DD).
+ * @param dateInput - Date string or Date object.
+ * @returns ISO formatted date string.
  */
 export function formatISODate(dateInput: string | Date | null | undefined): string {
   if (!dateInput) return ''
@@ -42,15 +42,15 @@ export function formatISODate(dateInput: string | Date | null | undefined): stri
 
     return date.toISOString().split(TIME_FORMATS.ISO_DATE_SPLIT)[0]
   } catch (error) {
-    console.error('ISO 日期格式化錯誤:', error)
+    console.error('ISO date formatting error:', error)
     return ''
   }
 }
 
 /**
- * 檢查日期是否為今天之前
- * @param date - 要檢查的日期
- * @returns 是否為過去的日期
+ * Checks if a date is before today.
+ * @param date - The date to check.
+ * @returns True if the date is in the past, false otherwise.
  */
 export function isDateBeforeToday(date: Date): boolean {
   const today = new Date()
@@ -59,48 +59,48 @@ export function isDateBeforeToday(date: Date): boolean {
 }
 
 /**
- * 檢查兩個日期是否為同一天
- * @param date1 - 第一個日期
- * @param date2 - 第二個日期
- * @returns 是否為同一天
+ * Checks if two dates are the same day.
+ * @param date1 - The first date.
+ * @param date2 - The second date.
+ * @returns True if they are the same day, false otherwise.
  */
 export function isSameDay(date1: Date, date2: Date): boolean {
   return date1.toDateString() === date2.toDateString()
 }
 
 /**
- * 從時段字串中取得小時數
- * @param timeSlot - 時段字串 (例如: "14:00")
- * @returns 小時數
+ * Gets the hour from a time slot string.
+ * @param timeSlot - Time slot string (e.g., "14:00").
+ * @returns The hour number.
  */
 export function getHourFromTimeSlot(timeSlot: string): number {
   return parseInt(timeSlot.split(':')[0])
 }
 
 /**
- * 過濾可用的時段（排除已過去的時段）
- * @param slots - 時段陣列
- * @param selectedDate - 選擇的日期
- * @returns 過濾後的時段陣列
+ * Filters available time slots (excludes past slots).
+ * @param slots - Array of time slots.
+ * @param selectedDate - The selected date.
+ * @returns Filtered array of time slots.
  */
 export function filterAvailableSlots(slots: string[], selectedDate: Date | string): string[] {
   const date = typeof selectedDate === 'string' ? new Date(selectedDate) : selectedDate
   const today = new Date()
 
-  // 如果不是今天，返回所有時段
+  // If not today, return all slots
   if (!isSameDay(date, today)) {
     return slots
   }
 
-  // 如果是今天，過濾掉已過去的時段
+  // If today, filter out past slots
   const currentHour = today.getHours()
   return slots.filter((slot) => getHourFromTimeSlot(slot) > currentHour)
 }
 
 /**
- * 驗證日期字串格式是否正確
- * @param dateString - 日期字串
- * @returns 是否為有效的日期格式
+ * Validates if a date string has a correct format.
+ * @param dateString - The date string.
+ * @returns True if the date string is valid, false otherwise.
  */
 export function isValidDateString(dateString: string): boolean {
   const date = new Date(dateString)

@@ -9,7 +9,7 @@ import {
 import { formatISODate } from '@/utils/date'
 
 /**
- * 使用者資訊介面
+ * User Information Interface
  */
 export interface UserInfo {
   name: string
@@ -18,7 +18,7 @@ export interface UserInfo {
 }
 
 /**
- * 額外預約人介面
+ * Extra Booker Interface
  */
 export interface ExtraPerson {
   name: string
@@ -27,7 +27,7 @@ export interface ExtraPerson {
 }
 
 /**
- * 預約表單資料介面
+ * Booking Form Data Interface
  */
 export interface BookingFormData {
   totalPeople: number
@@ -42,7 +42,7 @@ export interface BookingFormData {
 }
 
 /**
- * 預約資料介面（包含狀態和時間戳記）
+ * Booking Data Interface (includes status and timestamp)
  */
 export interface BookingData extends BookingFormData {
   id?: string
@@ -51,7 +51,7 @@ export interface BookingData extends BookingFormData {
 }
 
 /**
- * 創建空的預約表單資料
+ * Create Empty Booking Form Data
  */
 function createEmptyFormData(): BookingFormData {
   return {
@@ -67,29 +67,29 @@ function createEmptyFormData(): BookingFormData {
 }
 
 /**
- * 預約 Store
- * 管理所有預約相關的狀態和操作
+ * Booking Store
+ * Manages all booking-related state and operations.
  */
 export const useBookingStore = defineStore('booking', {
   state: () => ({
-    // 服務選擇狀態
+    // Service selection state
     selectedServiceId: null as number | null,
     // selectedStaffId: null as number | null, // Removed, use formData.selectedStaffId
     selectedServiceIds: [] as number[],
 
-    // 表單資料
+    // Form data
     formData: createEmptyFormData(),
 
-    // 預約歷史
+    // Booking history
     bookingHistory: [] as BookingData[],
 
-    // 編輯狀態
+    // Edit state
     editingItemIndex: null as number | null,
   }),
 
   getters: {
     /**
-     * 檢查是否有表單資料
+     * Check if there is form data
      */
     hasFormData(state): boolean {
       const form = state.formData
@@ -104,14 +104,14 @@ export const useBookingStore = defineStore('booking', {
     },
 
     /**
-     * 是否為編輯模式
+     * Is it in edit mode?
      */
     isEditMode(state): boolean {
       return state.editingItemIndex !== null
     },
 
     /**
-     * 取得當前編輯的項目
+     * Get the currently editing item
      */
     editingItem(state): BookingData | null {
       if (state.editingItemIndex === null) return null
@@ -120,10 +120,10 @@ export const useBookingStore = defineStore('booking', {
   },
 
   actions: {
-    // ========== 服務選擇操作 ==========
+    // ========== Service Selection Actions ==========
 
     /**
-     * 切換服務選擇狀態
+     * Toggle service selection status
      */
     toggleServiceSelection(serviceId: number) {
       const idx = this.selectedServiceIds.indexOf(serviceId)
@@ -135,13 +135,13 @@ export const useBookingStore = defineStore('booking', {
     },
 
     /**
-     * 設定選中的服務
+     * Set the selected service
      */
     setSelectedService(serviceId: number) {
       this.selectedServiceId = serviceId
       this.formData.serviceId = serviceId
 
-      // 只在非編輯模式下清除選中的服務人員
+      // Only clear selected service staff when not in edit mode
       if (!this.isEditMode) {
         // this.selectedStaffId = null // Removed
         this.formData.selectedStaffId = undefined
@@ -150,50 +150,50 @@ export const useBookingStore = defineStore('booking', {
     },
 
     /**
-     * 設定選中的服務人員
+     * Set the selected service staff
      */
     setSelectedStaff(staffId: number) {
       // this.selectedStaffId = staffId // Removed
       this.formData.selectedStaffId = staffId
-      this.formData.timeSlot = '' // 更換服務人員時清除時段
+      this.formData.timeSlot = '' // Clear time slot when changing service staff
     },
 
-    // ========== 表單資料操作 ==========
+    // ========== Form Data Actions ==========
 
     /**
-     * 設定預約資料
+     * Set booking data
      */
     setBookingData(data: BookingFormData) {
       this.formData = { ...data }
     },
 
     /**
-     * 更新表單資料
+     * Update form data
      */
     updateFormData(data: Partial<BookingFormData>) {
       this.formData = { ...this.formData, ...data }
 
-      // 確保 serviceId 與 selectedServiceId 保持同步
+      // Ensure serviceId and selectedServiceId remain synchronized
       if (this.selectedServiceId && !this.formData.serviceId) {
         this.formData.serviceId = this.selectedServiceId
       }
     },
 
     /**
-     * 清除表單資料
+     * Clear form data
      */
     clearFormData() {
       this.formData = createEmptyFormData()
     },
 
-    // ========== 預約歷史操作 ==========
+    // ========== Booking History Actions ==========
 
     /**
-     * 新增或更新預約
+     * Add or update a booking
      */
     addBooking(booking: BookingData) {
       if (this.isEditMode && this.editingItemIndex !== null) {
-        // 編輯模式：更新現有預約
+        // Edit mode: Update existing booking
         const existingBooking = this.bookingHistory[this.editingItemIndex]
         this.bookingHistory[this.editingItemIndex] = {
           ...booking,
@@ -203,7 +203,7 @@ export const useBookingStore = defineStore('booking', {
         }
         this.clearEditingItemIndex()
       } else {
-        // 新增模式：創建新預約
+        // Add mode: Create new booking
         const newBooking: BookingData = {
           ...booking,
           id: Date.now().toString(),
@@ -215,7 +215,7 @@ export const useBookingStore = defineStore('booking', {
     },
 
     /**
-     * 從歷史記錄中移除預約
+     * Remove booking from history
      */
     removeBookingFromHistory(index: number) {
       if (index >= 0 && index < this.bookingHistory.length) {
@@ -224,32 +224,32 @@ export const useBookingStore = defineStore('booking', {
     },
 
     /**
-     * 清除所有預約歷史
+     * Clear all booking history
      */
     clearBookingHistory() {
       this.bookingHistory = []
     },
 
-    // ========== 編輯模式操作 ==========
+    // ========== Edit Mode Actions ==========
 
     /**
-     * 設定編輯項目索引
+     * Set editing item index
      */
     setEditingItemIndex(index: number | null) {
       this.editingItemIndex = index
     },
 
     /**
-     * 清除編輯項目索引
+     * Clear editing item index
      */
     clearEditingItemIndex() {
       this.editingItemIndex = null
     },
 
-    // ========== 狀態管理操作 ==========
+    // ========== State Management Actions ==========
 
     /**
-     * 重置表單相關狀態
+     * Reset form-related state
      */
     resetForm() {
       // this.currentBooking = createEmptyBookingItem() // Removed
@@ -258,7 +258,7 @@ export const useBookingStore = defineStore('booking', {
     },
 
     /**
-     * 清除所有狀態
+     * Clear all state
      */
     clear() {
       this.selectedServiceId = null
@@ -269,7 +269,7 @@ export const useBookingStore = defineStore('booking', {
     },
 
     /**
-     * 重置所有狀態（用於新增項目）
+     * Reset all state (used for adding a new item)
      */
     resetAllState() {
       this.selectedServiceId = null
@@ -278,13 +278,13 @@ export const useBookingStore = defineStore('booking', {
       this.clearFormData()
     },
 
-    // ========== 工具方法 ==========
+    // ========== Utility Methods ==========
 
     /**
-     * 恢復頁面狀態（處理頁面重新整理）
+     * Restore page state (handles page refresh)
      */
     restorePageState() {
-      // 修正日期格式
+      // Correct date format
       if (this.formData.date) {
         const formattedDate = formatISODate(this.formData.date)
         if (formattedDate !== this.formData.date) {
@@ -292,18 +292,18 @@ export const useBookingStore = defineStore('booking', {
         }
       }
 
-      // 恢復服務選擇狀態
+      // Restore service selection state
       if (!this.selectedServiceId && this.formData.serviceId) {
         this.selectedServiceId = this.formData.serviceId
       }
 
-      // 恢復服務人員選擇狀態
+      // Restore service staff selection state
       // if (!this.selectedStaffId && this.formData.selectedStaffId) { // Removed
       //   this.selectedStaffId = this.formData.selectedStaffId
       // }
     },
 
-    // ========== 舊版方法（待移除） ==========
+    // ========== Legacy Methods (to be removed) ==========
     // addBookingItem and removeBookingItem were already removed conceptually by removing bookingItems
   },
 

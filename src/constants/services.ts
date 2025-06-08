@@ -1,6 +1,6 @@
 /**
- * 服務相關常數定義
- * 提供服務、員工和服務類型的資料結構
+ * Service-related constant definitions
+ * Provides data structures for services, staff, and service types.
  */
 
 export interface Staff {

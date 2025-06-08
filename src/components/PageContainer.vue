@@ -10,12 +10,12 @@
         maxWidth === 'lg' ? 'md:max-w-130 md:w-130' : '',
       ]"
     >
-      <!-- 頁面標題 -->
+      <!-- Page Title -->
       <h1 v-if="title" class="text-lg md:text-xl font-bold mb-5 md:mb-6 text-center text-gray-800">
         {{ title }}
       </h1>
 
-      <!-- 頁面內容 -->
+      <!-- Page Content -->
       <slot />
     </div>
   </div>

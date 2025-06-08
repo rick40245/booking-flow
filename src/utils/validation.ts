@@ -1,53 +1,53 @@
 /**
- * 表單驗證工具函數
- * 提供統一的驗證方法，確保資料的正確性和一致性
+ * Form validation utility functions.
+ * Provides unified validation methods to ensure data correctness and consistency.
  */
 
 import { VALIDATION_RULES, MESSAGES } from '@/constants/booking'
 import type { ValidationCallback } from '@/types/form-validation'
 
 /**
- * 驗證台灣手機號碼格式
- * @param phone - 手機號碼
- * @returns 是否為有效的台灣手機號碼
+ * Validates Taiwan mobile phone number format.
+ * @param phone - Mobile phone number.
+ * @returns True if it is a valid Taiwan mobile number, false otherwise.
  */
 export function isValidTaiwanPhone(phone: string): boolean {
   return VALIDATION_RULES.PHONE_PATTERN.test(phone)
 }
 
 /**
- * 驗證 Email 格式
- * @param email - Email 地址
- * @returns 是否為有效的 Email
+ * Validates Email format.
+ * @param email - Email address.
+ * @returns True if it is a valid Email, false otherwise.
  */
 export function isValidEmail(email: string): boolean {
   return VALIDATION_RULES.EMAIL_PATTERN.test(email)
 }
 
 /**
- * 驗證姓名長度
- * @param name - 姓名
- * @returns 是否符合長度限制
+ * Validates name length.
+ * @param name - Name.
+ * @returns True if it meets the length requirements, false otherwise.
  */
 export function isValidNameLength(name: string): boolean {
   return name.length > 0 && name.length <= VALIDATION_RULES.NAME_MAX_LENGTH
 }
 
 /**
- * 檢查電話或 Email 是否至少填寫一項
- * @param phone - 電話號碼
- * @param email - Email 地址
- * @returns 是否至少有一項聯絡方式
+ * Checks if at least one of phone or Email is filled.
+ * @param phone - Phone number.
+ * @param email - Email address.
+ * @returns True if at least one contact method is provided, false otherwise.
  */
 export function hasContactInfo(phone: string, email: string): boolean {
   return !!(phone.trim() || email.trim())
 }
 
 /**
- * 台灣手機號碼驗證器（用於 Element Plus 表單）
- * @param rule - 驗證規則
- * @param value - 驗證值
- * @param callback - 回調函數
+ * Taiwan mobile phone number validator (for Element Plus forms).
+ * @param _rule - Validation rule.
+ * @param value - Value to validate.
+ * @param callback - Callback function.
  */
 export function validateTaiwanPhone(
   _rule: unknown,
@@ -62,10 +62,10 @@ export function validateTaiwanPhone(
 }
 
 /**
- * Email 格式驗證器（用於 Element Plus 表單）
- * @param rule - 驗證規則
- * @param value - 驗證值
- * @param callback - 回調函數
+ * Email format validator (for Element Plus forms).
+ * @param _rule - Validation rule.
+ * @param value - Value to validate.
+ * @param callback - Callback function.
  */
 export function validateEmailFormat(
   _rule: unknown,
@@ -80,9 +80,9 @@ export function validateEmailFormat(
 }
 
 /**
- * 電話或 Email 必填驗證器（用於 Element Plus 表單）
- * @param extraPersonForm - 額外預約人表單資料
- * @returns 驗證函數
+ * Phone or Email required validator (for Element Plus forms).
+ * @param extraPersonForm - Extra booker form data.
+ * @returns Validation function.
  */
 export function createPhoneOrEmailValidator(extraPersonForm: { phone: string; email: string }) {
   return (_rule: unknown, _value: string, callback: ValidationCallback): void => {
@@ -95,10 +95,10 @@ export function createPhoneOrEmailValidator(extraPersonForm: { phone: string; em
 }
 
 /**
- * 創建必填驗證規則
- * @param message - 錯誤訊息
- * @param trigger - 觸發時機
- * @returns 驗證規則物件
+ * Creates a required validation rule.
+ * @param message - Error message.
+ * @param trigger - Trigger timing.
+ * @returns Validation rule object.
  */
 export function createRequiredRule(
   message: string = MESSAGES.ERRORS.REQUIRED_FIELD,
@@ -108,11 +108,11 @@ export function createRequiredRule(
 }
 
 /**
- * 創建長度驗證規則
- * @param max - 最大長度
- * @param message - 錯誤訊息
- * @param trigger - 觸發時機
- * @returns 驗證規則物件
+ * Creates a max length validation rule.
+ * @param max - Maximum length.
+ * @param message - Error message.
+ * @param trigger - Trigger timing.
+ * @returns Validation rule object.
  */
 export function createMaxLengthRule(
   max: number,
@@ -123,11 +123,11 @@ export function createMaxLengthRule(
 }
 
 /**
- * 創建正則表達式驗證規則
- * @param pattern - 正則表達式
- * @param message - 錯誤訊息
- * @param trigger - 觸發時機
- * @returns 驗證規則物件
+ * Creates a pattern validation rule.
+ * @param pattern - Regular expression.
+ * @param message - Error message.
+ * @param trigger - Trigger timing.
+ * @returns Validation rule object.
  */
 export function createPatternRule(
   pattern: RegExp,

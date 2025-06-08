@@ -24,5 +24,5 @@ const router = createRouter({
   ],
 })
 
-// 路由守衛將在 main.ts 中統一註冊，因需與 Pinia 狀態、Dialog 整合
+// Route guards will be registered uniformly in main.ts, as they need to be integrated with Pinia state and Dialogs.
 export default router
