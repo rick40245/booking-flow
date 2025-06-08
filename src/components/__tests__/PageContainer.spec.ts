@@ -26,14 +26,8 @@ describe('PageContainer.vue', () => {
   describe('maxWidth prop', () => {
     // Helper function to get the specific div that contains the maxWidth classes
     const getContainerDiv = (wrapper: ReturnType<typeof mount>) => {
-      // Based on the component structure, the classes are on the first child div of the root element
-      // <div data-v-xxxx> <div class="mx-auto w-full px-4 ..."> ... </div> </div>
-      // Or if there's a title, it might be the second child if the title is outside this div.
-      // Let's assume the target div is the one with `mx-auto` class for robustness if structure changes slightly.
-      // If not, we might need a more specific selector like a test-id.
-      // For PageContainer.vue, the classes are on the div immediately inside the root <main> element.
-      // <main> <div class="mx-auto w-full px-4 ..."> ... </div> </main>
-      return wrapper.find('main > div');
+      // The maxWidth classes are on the inner div with bg-white class
+      return wrapper.find('.bg-white');
     };
 
     it('should apply default maxWidth class (md) when maxWidth prop is not provided', () => {
@@ -92,8 +86,8 @@ describe('PageContainer.vue', () => {
 
     it('should render empty slot if no content provided', () => {
         const wrapper = mount(PageContainer);
-        // The slot is inside the div we identified for maxWidth
-        const containerDiv = wrapper.find('main > div');
+        // The slot is inside the inner div with bg-white class
+        const containerDiv = wrapper.find('.bg-white');
         expect(containerDiv.text()).toBe('');
       });
   });

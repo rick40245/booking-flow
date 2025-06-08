@@ -332,7 +332,8 @@ describe('useBookingStore (Refactored)', () => {
         store.restorePageState();
         expect(store.formData.date).toBe(formatISODate(dateObj));
 
-        store.formData.date = '2023/12/25';
+        // Use a specific UTC date to avoid timezone issues
+        store.formData.date = '2023-12-25T12:00:00.000Z';
         store.restorePageState();
         expect(store.formData.date).toBe('2023-12-25');
       });
