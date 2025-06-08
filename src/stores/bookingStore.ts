@@ -51,17 +51,6 @@ export interface BookingData extends BookingFormData {
 }
 
 /**
- * 預約項目介面（舊版，待重構）
- */
-export interface BookingItem {
-  serviceId: number | null
-  date: string | null
-  slot: string | null
-  primaryUser: UserInfo
-  extraUsers: UserInfo[]
-}
-
-/**
  * 創建空的預約表單資料
  */
 function createEmptyFormData(): BookingFormData {
@@ -78,40 +67,15 @@ function createEmptyFormData(): BookingFormData {
 }
 
 /**
- * 創建空的預約項目
- */
-function createEmptyBookingItem(): BookingItem {
-  return {
-    serviceId: null,
-    date: null,
-    slot: null,
-    primaryUser: {
-      name: DEFAULT_FORM_VALUES.NAME,
-      phone: DEFAULT_FORM_VALUES.PHONE,
-      email: DEFAULT_FORM_VALUES.EMAIL,
-    },
-    extraUsers: [],
-  }
-}
-
-/**
  * 預約 Store
  * 管理所有預約相關的狀態和操作
  */
 export const useBookingStore = defineStore('booking', {
   state: () => ({
-    // 購物車相關（舊版，待移除）
-    cart: [] as BookingItem[],
-    currentBooking: createEmptyBookingItem(),
-
     // 服務選擇狀態
     selectedServiceId: null as number | null,
-    selectedStaffId: null as number | null,
+    // selectedStaffId: null as number | null, // Removed, use formData.selectedStaffId
     selectedServiceIds: [] as number[],
-
-    // 預約資料（待重構）
-    bookingData: null as BookingData | null,
-    bookingItems: [] as BookingData[],
 
     // 表單資料
     formData: createEmptyFormData(),
@@ -124,22 +88,6 @@ export const useBookingStore = defineStore('booking', {
   }),
 
   getters: {
-    /**
-     * 檢查是否有未完成的舊版表單
-     */
-    hasUnfinishedForm(state): boolean {
-      const booking = state.currentBooking
-      return !!(
-        booking.serviceId ||
-        booking.date ||
-        booking.slot ||
-        booking.primaryUser.name ||
-        booking.primaryUser.phone ||
-        booking.primaryUser.email ||
-        booking.extraUsers.length > 0
-      )
-    },
-
     /**
      * 檢查是否有表單資料
      */
@@ -172,41 +120,6 @@ export const useBookingStore = defineStore('booking', {
   },
 
   actions: {
-    // ========== 購物車操作（舊版，待移除） ==========
-
-    addToCart(service: Service) {
-      this.currentBooking.serviceId = service.id
-      this.cart.push({ ...this.currentBooking })
-      this.resetCurrentBooking()
-    },
-
-    updateCurrentBooking(data: Partial<BookingItem>) {
-      this.currentBooking = { ...this.currentBooking, ...data }
-    },
-
-    resetCurrentBooking() {
-      this.currentBooking = createEmptyBookingItem()
-    },
-
-    removeFromCart(index: number) {
-      this.cart.splice(index, 1)
-    },
-
-    editBooking(index: number) {
-      this.currentBooking = { ...this.cart[index] }
-      this.cart.splice(index, 1)
-    },
-
-    calculateTotal() {
-      // TODO: 實作價格計算邏輯
-      return this.cart.reduce((total) => total, 0)
-    },
-
-    submitBooking() {
-      this.cart = []
-      return true
-    },
-
     // ========== 服務選擇操作 ==========
 
     /**
@@ -230,7 +143,7 @@ export const useBookingStore = defineStore('booking', {
 
       // 只在非編輯模式下清除選中的服務人員
       if (!this.isEditMode) {
-        this.selectedStaffId = null
+        // this.selectedStaffId = null // Removed
         this.formData.selectedStaffId = undefined
         this.formData.timeSlot = ''
       }
@@ -240,7 +153,7 @@ export const useBookingStore = defineStore('booking', {
      * 設定選中的服務人員
      */
     setSelectedStaff(staffId: number) {
-      this.selectedStaffId = staffId
+      // this.selectedStaffId = staffId // Removed
       this.formData.selectedStaffId = staffId
       this.formData.timeSlot = '' // 更換服務人員時清除時段
     },
@@ -259,11 +172,6 @@ export const useBookingStore = defineStore('booking', {
      */
     updateFormData(data: Partial<BookingFormData>) {
       this.formData = { ...this.formData, ...data }
-
-      // 同步 selectedStaffId
-      if (data.selectedStaffId !== undefined) {
-        this.selectedStaffId = data.selectedStaffId || null
-      }
 
       // 確保 serviceId 與 selectedServiceId 保持同步
       if (this.selectedServiceId && !this.formData.serviceId) {
@@ -316,9 +224,9 @@ export const useBookingStore = defineStore('booking', {
     },
 
     /**
-     * 清空購物車（清除所有預約歷史）
+     * 清除所有預約歷史
      */
-    clearCart() {
+    clearBookingHistory() {
       this.bookingHistory = []
     },
 
@@ -344,7 +252,7 @@ export const useBookingStore = defineStore('booking', {
      * 重置表單相關狀態
      */
     resetForm() {
-      this.currentBooking = createEmptyBookingItem()
+      // this.currentBooking = createEmptyBookingItem() // Removed
       this.selectedServiceId = null
       this.selectedServiceIds = []
     },
@@ -354,9 +262,9 @@ export const useBookingStore = defineStore('booking', {
      */
     clear() {
       this.selectedServiceId = null
-      this.selectedStaffId = null
-      this.bookingData = null
-      this.bookingItems = []
+      // this.selectedStaffId = null // Removed
+      // this.bookingData = null // Removed
+      // this.bookingItems = [] // Removed
       this.clearFormData()
     },
 
@@ -365,20 +273,12 @@ export const useBookingStore = defineStore('booking', {
      */
     resetAllState() {
       this.selectedServiceId = null
-      this.selectedStaffId = null
+      // this.selectedStaffId = null // Removed
       this.editingItemIndex = null
       this.clearFormData()
     },
 
     // ========== 工具方法 ==========
-
-    /**
-     * 格式化日期字串
-     * @deprecated 使用 utils/date.ts 中的 formatISODate
-     */
-    formatDateString(dateInput: string | Date): string {
-      return formatISODate(dateInput)
-    },
 
     /**
      * 恢復頁面狀態（處理頁面重新整理）
@@ -398,20 +298,13 @@ export const useBookingStore = defineStore('booking', {
       }
 
       // 恢復服務人員選擇狀態
-      if (!this.selectedStaffId && this.formData.selectedStaffId) {
-        this.selectedStaffId = this.formData.selectedStaffId
-      }
+      // if (!this.selectedStaffId && this.formData.selectedStaffId) { // Removed
+      //   this.selectedStaffId = this.formData.selectedStaffId
+      // }
     },
 
     // ========== 舊版方法（待移除） ==========
-
-    addBookingItem(item: BookingData) {
-      this.bookingItems.push(item)
-    },
-
-    removeBookingItem(index: number) {
-      this.bookingItems.splice(index, 1)
-    },
+    // addBookingItem and removeBookingItem were already removed conceptually by removing bookingItems
   },
 
   persist: {
